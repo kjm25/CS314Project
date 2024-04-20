@@ -1,0 +1,15 @@
+div {
+    border: 1px solid red;
+}
+
+.chat-history-message {
+    border: 1px solid blue;
+    max-width: 400px;
+}
+
+.chat-history-message p {
+    border: 1px solid green;
+    height: 60px;
+    overflow: hidden;
+}
+
