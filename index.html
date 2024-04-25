@@ -7,41 +7,17 @@
     <title>CS.314 Chat App</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="scripts.js" defer ></script>
   </head>
   <body>
 
-    <!-- Single Message item -->
-    <div class="chat-history-message row">
-        <!-- Notification for new message -->
-        <div class="col-1">
-            <!-- Circle Notification -->
-        </div>
-        <!-- Container for text message -->
-        <!-- Header information -->
-        <div class="col">
-            <div class="row">
-                <!-- Contact name and date/time -->
-                <h2 class="col-8">Contact Name</h2>
-                <span class="col-4">12:00 PM</span>
-            </div>
-            <!-- Message contents -->
-            <div class="col">
-                <!-- Text -->
-                <p class="col-10">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis tristique arcu sed leo interdum varius. Aenean nec augue nec sem dapibus aliquet non id augue. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras erat augue, tempus et orci non, sodales lobortis velit. Ut eget ante ut ligula cursus ultrices at et leo. Sed a rhoncus nisl. Suspendisse dictum metus at tellus luctus malesuada. Ut ante nulla, ultrices id massa dignissim, vulputate pellentesque augue. Proin vehicula nulla a molestie hendrerit. Nullam nec sapien turpis. Aenean efficitur id quam sed suscipit. Praesent odio nibh, porta quis commodo a, convallis sit amet tellus. Phasellus ornare neque faucibus accumsan porta.</p>
-                <!-- Delete Message (requires hover) -->
-                <div class="col-2">X</div>
-            </div>
-        </div>
-    </div>
-
-    <nav id="message-history" class="sidebar">
-        <ul>
-            <li>
-                
-            </li>
-        </ul>
-    </nav>
-	<script src="index.js"></script>
+    <form action="" method="POST" id="message-text" class="send-message-form" target="">
+        <input type="text" name="message" id="message" placeholder="Chaterize">
+        <input type="submit" value="Send" />
+    </form>
+	
+    
+    <script src="index.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
