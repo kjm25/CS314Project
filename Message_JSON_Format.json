@@ -1,8 +1,23 @@
+// Single Message
 {
-	"Author_ID": "author_id",
-	"Author_Name": "Name",
+	"USER_ID": "author_id",
+	"USER_NAME": "Name",
 	"Conversation_ID": "conversation_id",
 	"Message_ID": "message_id",
 	"Text": "the text of the message",
-	"Time_Sent": "2024-01-25T12:34:56.789+02:00"
+	"Time_Sent": "2024-01-25T12:34:56.789+02:00",
+	"Reply_To" : "Message_ID"
+}
+
+
+// Converstaions
+{
+	"Conversation_ID": "conversation_id",
+	"Members" : [
+		"User_ID" : "Name",
+	],
+	"Last_Updated" : "2024-01-25T12:34:56.789+02:00",
+	"Created" : "2022-01-25T12:34:56.789+02:00",
+	"is_active" : false,
+
 }
