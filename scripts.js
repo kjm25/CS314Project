@@ -1,3 +1,4 @@
+
 const send_message = function(message) {
     console.log(message);
 };
@@ -15,6 +16,7 @@ MESSAGE.addEventListener('submit', function(event) {
     if (validate_message(MESSAGE_TEXT)) {
         send_message(MESSAGE_TEXT);
     }
+    //will need to post to local server here
     console.log(event);
 });
 
