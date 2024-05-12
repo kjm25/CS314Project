@@ -1,7 +1,6 @@
 // Single Message
 {
-	"USER_ID": "author_id",
-	"USER_NAME": "Name",
+	"Email" : "user@email.com",
 	"Conversation_ID": "conversation_id",
 	"Message_ID": "message_id",
 	"Text": "the text of the message",
@@ -19,5 +18,21 @@
 	"Last_Updated" : "2024-01-25T12:34:56.789+02:00",
 	"Created" : "2022-01-25T12:34:56.789+02:00",
 	"is_active" : false,
+	"Num_Messages" : 1000,
+}
 
+
+// Users
+{
+	// Email is the primary key for a user
+	"Email" : "user@email.com",
+	"USER_NAME": "Name",
+	"Contacts" :[
+		"USER_ID": "author_id",
+		"Custom_Name" : "new_name",
+		"Last_Chatted" : "2022-01-25T12:34:56.789+02:00",
+	],
+	"Blocked" : [
+		"USER_ID": "author_id"
+	]
 }
