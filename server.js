@@ -16,25 +16,22 @@ io.on('connection', (socket) =>
 
   let newest_time = null;
 
-  setInterval(async () => { //emit messages from sever
-    let result = await db_get("Test_user");
-    //console.log(result);
+  let interval = setInterval(async () => { //emit messages from sever
+    let result = await db_get("Test_user"); //db get could take in newest time to see if need get whole data
 
     for (const ele of result)
     {
-      if(newest_time === null || ele.Time_Sent > newest_time )
+      if(newest_time === null || ele.Time_Sent > newest_time)
       {
         newest_time = ele.Time_Sent;
         socket.emit('chat message', ele.Text);
       }
-      console.log(newest_time);
-      console.log(ele);
-      
     }
   }, 5000);
 
   socket.on('disconnect', () => {
     console.log('user disconnected');
+    clearInterval(interval);
   });
 });
 
@@ -59,7 +56,6 @@ app.post('/data', (req, res) => {
   db_send(req.body.message);
 
 });
-
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = "mongodb+srv://kjm25:CR0Uf4mzLeSBm2Ou@cs314server.6ts6q8f.mongodb.net/?retryWrites=true&w=majority&appName=CS314Server";
