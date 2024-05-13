@@ -19,16 +19,17 @@ app.post('/data', (req, res) => {
   res.json({message: 'Data received!'}); // send a response back to the client
 
   //call MongoDB now?
+  run(req.body.message);
 
 });
 
 
 //Also use Mongose for the connection instead of mongo db?
 
-/*
+
 //modfied MongoDB sample code
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = "mongodb+srv://kjm25:<wcvxWTjWr47cbksW>@cs314server.6ts6q8f.mongodb.net/?retryWrites=true&w=majority&appName=CS314Server";
+const uri = "mongodb+srv://kjm25:CR0Uf4mzLeSBm2Ou@cs314server.6ts6q8f.mongodb.net/?retryWrites=true&w=majority&appName=CS314Server";
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -39,7 +40,7 @@ const client = new MongoClient(uri, {
   }
 });
 
-async function run() {
+async function run(message) {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
@@ -48,7 +49,7 @@ async function run() {
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
     const database = client.db("testDB")
     const testCollection = database.collection("testData");
-    const doc = {USER_ID: "Test_user"};
+    const doc = {USER_ID: "Test_user", Message: message};
     const result = await testCollection.insertOne(doc);
     console.log(result);
   } finally {
@@ -56,8 +57,5 @@ async function run() {
     await client.close();
   }
 }
-run().catch(console.dir);
-
 //end MongoDB sample code 
 
-*/
