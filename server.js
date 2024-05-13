@@ -4,27 +4,40 @@ const app = express();
 app.use(express.static(__dirname + '/resources' ));
 app.use(express.json());
 
+//Socket.io code for constant updates
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
+
+io.on('connection', (socket) => {
+  console.log('a user connected');
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+});
+
 app.get('/', (req, res) => {
   //res.send('<h1>Hello, Express.js Server!</h1>');
   res.sendFile(path.join(__dirname, 'resources', 'index.html'));
 });
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+/*app.listen(port, () => {
+   console.log(`Server is running on port ${port}`);
+});*/
+server.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
 
 app.post('/data', (req, res) => {
   console.log(req.body); // access data out of JSON
   res.json({message: 'Data received!'}); // send a response back to the client
 
-  //call MongoDB now?
+  //call MongoDB
   run(req.body.message);
 
 });
-
-
-//Also use Mongose for the connection instead of mongo db?
 
 
 //modfied MongoDB sample code

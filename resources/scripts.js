@@ -33,3 +33,10 @@ const validate_message = function (text)
 {
     return text != "";
 }
+
+
+// <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+function socket_connection()
+{
+    var socket = io();
+} 
