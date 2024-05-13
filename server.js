@@ -2,6 +2,7 @@
 const express = require('express');
 const app = express();
 app.use(express.static(__dirname + '/resources' ));
+app.use(express.json());
 
 app.get('/', (req, res) => {
   //res.send('<h1>Hello, Express.js Server!</h1>');
@@ -11,6 +12,11 @@ app.get('/', (req, res) => {
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
+});
+
+app.post('/data', (req, res) => {
+  console.log(req.body); // your data will be available here
+  res.json({message: 'Data received!'}); // send a response back to the client
 });
 
 //Will need to handle post/fetch with express for this to work

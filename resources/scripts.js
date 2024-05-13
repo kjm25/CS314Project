@@ -16,8 +16,21 @@ MESSAGE.addEventListener('submit', function(event) {
     if (validate_message(MESSAGE_TEXT)) {
         send_message(MESSAGE_TEXT);
     }
-    //will need to post to local server here
     console.log(event);
+
+    //will need to post to local server here
+
+    
+    var send = {"name":"Test", "message": MESSAGE_TEXT};
+    var sendString = JSON.stringify(send);
+    //alert(sendString);
+    //xhttp.send(send);
+
+    fetch('http://localhost:3000/data', 
+    {method: 'POST', headers: {'Content-Type': 'application/json',},
+    body: sendString,
+    }).then(response => response.json())
+    .then(sendString => {console.log('Success:', sendString);})
 });
 
 
