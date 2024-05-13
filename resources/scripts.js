@@ -39,4 +39,14 @@ const validate_message = function (text)
 function socket_connection()
 {
     var socket = io();
+
+    var messages = document.getElementById('messages');
+
+    socket.on('chat message', function(msg) 
+    {
+      var item = document.createElement('li');
+      item.textContent = msg;
+      messages.appendChild(item);
+      window.scrollTo(0, document.body.scrollHeight);
+    });
 } 
