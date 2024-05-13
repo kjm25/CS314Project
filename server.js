@@ -15,12 +15,14 @@ app.listen(port, () => {
 });
 
 app.post('/data', (req, res) => {
-  console.log(req.body); // your data will be available here
+  console.log(req.body); // access data out of JSON
   res.json({message: 'Data received!'}); // send a response back to the client
+
+  //call MongoDB now?
+
 });
 
-//Will need to handle post/fetch with express for this to work
-//Will also likely need to update debugger to run with local host instead of index.html
+
 //Also use Mongose for the connection instead of mongo db?
 
 /*
