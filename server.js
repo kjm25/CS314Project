@@ -1,7 +1,7 @@
 //Seperate server code needed as MongoDB / require cannot be run from client code
 const express = require('express');
 const app = express();
-app.use(express.static(__dirname + '/resources' ));
+app.use(express.static(__dirname + '/front_end' ));
 app.use(express.json());
 
 //Socket.io code for constant updates
@@ -37,7 +37,7 @@ io.on('connection', (socket) =>
 
 app.get('/', (req, res) => {
   //res.send('<h1>Hello, Express.js Server!</h1>');
-  res.sendFile(path.join(__dirname, 'resources', 'index.html'));
+  res.sendFile(path.join(__dirname, 'front_end', 'index.html'));
 });
 
 const port = process.env.PORT || 3000;
