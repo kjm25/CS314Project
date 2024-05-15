@@ -9,7 +9,7 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
-const DB_REFRESH_TIME = 5000;
+const DB_REFRESH_TIME = 3000;
 
 
 io.on('connection', (socket) => 
@@ -41,7 +41,7 @@ io.on('connection', (socket) =>
 
   socket.on('message', function(message)
   {
-    console.log(message); // access data out of JSON
+    console.log(message); 
   
     //call MongoDB
     db_send(message, server_username);
@@ -59,21 +59,10 @@ app.get('/', (req, res) => {
 });
 
 const port = process.env.PORT || 3000;
-/*app.listen(port, () => {
-   console.log(`Server is running on port ${port}`);
-});*/
+
 server.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
-
-/*app.post('/data', (req, res) => {
-  console.log(req.body); // access data out of JSON
-  res.json({message: 'Data received!'}); // send a response back to the client
-
-  //call MongoDB
-  db_send(req.body.message, "Test_user");
-
-});*/ //raw html message send
 
 
 const { MongoClient, ServerApiVersion } = require('mongodb');

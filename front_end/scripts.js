@@ -21,16 +21,7 @@ MESSAGE.addEventListener('submit', function(event) {
     console.log("New Message: " + MESSAGE_TEXT);
 
     globalsocket.emit('message', MESSAGE_TEXT);
-
-    /*var send = {"name":"Test", "message": MESSAGE_TEXT};
-    var sendString = JSON.stringify(send);
-
-    
-    fetch('http://localhost:3000/data', 
-    {method: 'POST', headers: {'Content-Type': 'application/json',},
-    body: sendString,
-    }).then(response => response.json())
-    .then(sendString => {console.log('Success:', sendString);})*/
+    document.getElementById("message").value = '';
 });
 
 const USERNAME = document.getElementById("username-text");
