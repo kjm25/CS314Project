@@ -16,16 +16,39 @@ MESSAGE.addEventListener('submit', function(event) {
     if (validate_message(MESSAGE_TEXT)) {
         send_message(MESSAGE_TEXT);
     }
-    console.log(event);
-    
-    var send = {"name":"Test", "message": MESSAGE_TEXT};
+    console.log(MESSAGE_TEXT);
+
+    console.log("New Message: " + MESSAGE_TEXT);
+
+    globalsocket.emit('message', MESSAGE_TEXT);
+
+    /*var send = {"name":"Test", "message": MESSAGE_TEXT};
     var sendString = JSON.stringify(send);
 
+    
     fetch('http://localhost:3000/data', 
     {method: 'POST', headers: {'Content-Type': 'application/json',},
     body: sendString,
     }).then(response => response.json())
-    .then(sendString => {console.log('Success:', sendString);})
+    .then(sendString => {console.log('Success:', sendString);})*/
+});
+
+const USERNAME = document.getElementById("username-text");
+
+USERNAME.addEventListener('submit', function(event) {
+    // Prevent default prevents the page from reloading upon submit
+    event.preventDefault();
+
+    var messages = document.getElementById('messages');
+    while(messages.firstChild) messages.removeChild(messages.firstChild);//empty on username change
+
+    // Get the text from the form.
+    // The message element is the text box that users type into.
+    const USERNAME_TEXT = document.getElementById("username").value;
+
+    console.log("New Username: " + USERNAME_TEXT);
+
+    globalsocket.emit('username', USERNAME_TEXT);
 });
 
 
@@ -39,6 +62,7 @@ const validate_message = function (text)
 function socket_connection()
 {
     var socket = io();
+    window.globalsocket = socket;
 
     var messages = document.getElementById('messages');
 

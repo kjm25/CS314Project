@@ -9,15 +9,18 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
+const DB_REFRESH_TIME = 5000;
+
 
 io.on('connection', (socket) => 
 {
   console.log('a user connected');
+  let server_username = "Test_user";
 
   let newest_time = null;
 
   let interval = setInterval(async () => { //emit messages from sever
-    let result = await db_get("Test_user"); //db get could take in newest time to see if need get whole data
+  let result = await db_get(server_username); //db get could take in newest time to see if need get whole data
 
     for (const ele of result)
     {
@@ -27,7 +30,22 @@ io.on('connection', (socket) =>
         socket.emit('chat message', ele.Text);
       }
     }
-  }, 5000);
+  }, DB_REFRESH_TIME);
+
+  socket.on('username', function(username)
+  {
+    console.log(username);
+    server_username = username;
+    newest_time = null;
+  });
+
+  socket.on('message', function(message)
+  {
+    console.log(message); // access data out of JSON
+  
+    //call MongoDB
+    db_send(message, server_username);
+  });
 
   socket.on('disconnect', () => {
     console.log('user disconnected');
@@ -48,14 +66,15 @@ server.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
 
-app.post('/data', (req, res) => {
+/*app.post('/data', (req, res) => {
   console.log(req.body); // access data out of JSON
   res.json({message: 'Data received!'}); // send a response back to the client
 
   //call MongoDB
-  db_send(req.body.message);
+  db_send(req.body.message, "Test_user");
 
-});
+});*/ //raw html message send
+
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = "mongodb+srv://kjm25:CR0Uf4mzLeSBm2Ou@cs314server.6ts6q8f.mongodb.net/?retryWrites=true&w=majority&appName=CS314Server";
@@ -69,7 +88,7 @@ const client = new MongoClient(uri, {
   }
 });
 
-async function db_send(message) {
+async function db_send(message, username) {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
@@ -78,7 +97,7 @@ async function db_send(message) {
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
     const database = client.db("testDB")
     const testCollection = database.collection("testData");
-    const doc = {USER_ID: "Test_user", "Text": message, "Time_Sent": new Date()};
+    const doc = {USER_ID: username, "Text": message, "Time_Sent": new Date()};
     const result = await testCollection.insertOne(doc);
   } finally {
     // Ensures that the client will close when you finish/error
