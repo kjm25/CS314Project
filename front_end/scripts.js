@@ -20,6 +20,8 @@ MESSAGE.addEventListener('submit', function(event) {
     document.getElementById("message").value = '';
 });
 
+
+//can remove eventually now that we can get usernames from google. Might be useful for testing
 const USERNAME = document.getElementById("username-text");
 USERNAME.addEventListener('submit', function(event) {
     // Prevent default prevents the page from reloading upon submit
@@ -82,3 +84,40 @@ function socket_connection()
       window.scrollTo(0, document.body.scrollHeight);
     });
 } 
+
+
+
+function decodeJwtResponse (token) 
+{//from https://stackoverflow.com/questions/68927855/sign-in-with-google-console-log
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+}
+
+function save_cookie(response)
+{
+    response_string = JSON.stringify(response);
+    document.cookie = "id_token=" + response_string + "; path=/";
+    console.log(response);
+    console.log(response_string);
+    console.log(document.cookie);
+}
+
+function read_cookie(name)
+{
+    console.log("Trying to read cookie");
+    let cookie_array = document.cookie.split(';');
+    for(let i = 0; i < cookie_array.length; i++) {
+        let cookie_pairs = cookie_array[i].split("=");
+
+        console.log(cookie_pairs[0] + " pair 0");
+        if(name == cookie_pairs[0].trim()) {
+            console.log(JSON.parse(cookie_pairs[1]) + " pair 1");
+            globalsocket.emit('google_sign', JSON.parse(cookie_pairs[1]));
+        }
+    }
+}

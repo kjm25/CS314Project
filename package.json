@@ -18,6 +18,7 @@
   "homepage": "https://github.com/kjm25/CS314Project#readme",
   "dependencies": {
     "express.js": "^1.0.0",
+    "google-auth-library": "^9.10.0",
     "mongodb": "^6.5.0",
     "node-fetch": "^3.3.2",
     "node.js": "^0.0.1-security",

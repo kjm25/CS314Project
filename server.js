@@ -4,6 +4,7 @@ const app = express();
 app.use(express.static(__dirname + '/front_end' ));
 app.use(express.json());
 
+
 //Socket.io code for constant updates
 const http = require('http');
 const server = http.createServer(app);
@@ -54,6 +55,24 @@ io.on('connection', (socket) =>
     db_send(message, server_username, server_chat_id);
   });
 
+  socket.on('google_sign', function(token)
+  {
+    async function verify() {
+      const ticket = await google_client.verifyIdToken({
+          idToken: token['credential'],
+          audience: CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
+          // Or, if multiple clients access the backend:
+          //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+      });
+      const verified_payload = ticket.getPayload();
+      const email = verified_payload['email']; 
+      console.log(email, "just was verified to signed in.");
+      server_username = email;
+    }
+    verify().catch(console.error);
+
+  });
+
   socket.on('disconnect', () => {
     console.log('user disconnected');
     clearInterval(interval);
@@ -64,6 +83,36 @@ app.get('/', (req, res) => {
   //res.send('<h1>Hello, Express.js Server!</h1>');
   res.sendFile(path.join(__dirname, 'front_end', 'index.html'));
 });
+
+
+const {OAuth2Client} = require('google-auth-library');
+const CLIENT_ID = "278406872967-ds0j19p8s6gouvvklrma8cmpjicpmnfu.apps.googleusercontent.com"
+const google_client = new OAuth2Client(CLIENT_ID);
+
+/*async function verify(token) {
+  const ticket = await google_client.verifyIdToken({
+      idToken: token,
+      audience: CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
+      // Or, if multiple clients access the backend:
+      //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+  });
+
+  const payload = ticket.getPayload();
+  const userid = payload['sub'];
+  const email = payload['email']; 
+  console.log(email, "was verified");
+  return payload
+}*/
+
+
+app.post('/auth/google/callback', async (req, res) => {
+  console.log("Someone tried to signed in");
+
+  console.log(req);
+  //res.redirect('/');
+  
+});
+
 
 const port = process.env.PORT || 3000;
 
@@ -90,7 +139,7 @@ async function db_send(message, username, chat_id) {
     await client.connect();
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    console.log("Pinged your deployment. You successfully connected to MongoDB! for send");
     const database = client.db("testDB")
     const testCollection = database.collection("testData");
     const doc = {"User_ID": username, "Chat_ID": chat_id, "Text": message, "Time_Sent": new Date()};
@@ -109,7 +158,7 @@ async function db_get(chat_id) {
     await client.connect();
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    //console.log("Pinged your deployment. You successfully connected to MongoDB!");
     const database = client.db("testDB")
     const testCollection = database.collection("testData");
     result = await testCollection.find({ Chat_ID: chat_id }).sort({Time_Sent: 1}).project({User_ID:1, Text: 1, Time_Sent: 1}).toArray();
