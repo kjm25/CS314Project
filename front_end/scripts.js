@@ -1,8 +1,3 @@
-
-const send_message = function(message) {
-    console.log(message);
-};
-
 const MESSAGE = document.getElementById("message-text");
 
 MESSAGE.addEventListener('submit', function(event) {
@@ -13,9 +8,11 @@ MESSAGE.addEventListener('submit', function(event) {
     // The message element is the text box that users type into.
     const MESSAGE_TEXT = document.getElementById("message").value;
 
-    if (validate_message(MESSAGE_TEXT)) {
-        send_message(MESSAGE_TEXT);
+    if (validate_message(MESSAGE_TEXT) == false) {
+        console.log("MESSAGE_TEXT was invalid");
+        return;
     }
+
     console.log(MESSAGE_TEXT);
 
     console.log("New Message: " + MESSAGE_TEXT);
@@ -37,8 +34,12 @@ USERNAME.addEventListener('submit', function(event) {
     // The message element is the text box that users type into.
     const USERNAME_TEXT = document.getElementById("username").value;
 
-    console.log("New Username: " + USERNAME_TEXT);
+    if (validate_message(USERNAME_TEXT) == false) {
+        console.log("USERNAME_TEXT was invalid");
+        return;
+    }
 
+    console.log("New Username: " + USERNAME_TEXT);
     globalsocket.emit('username', USERNAME_TEXT);
 });
 
