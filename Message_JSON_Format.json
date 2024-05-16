@@ -1,7 +1,7 @@
 // Single Message
 {
-	"Email" : "user@email.com",
-	"Conversation_ID": "conversation_id",
+	"User_ID" : "user@email.com",
+	"Chat_ID": "conversation_id",
 	"Message_ID": "message_id",
 	"Text": "the text of the message",
 	"Time_Sent": "2024-01-25T12:34:56.789+02:00",
