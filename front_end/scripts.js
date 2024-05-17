@@ -98,11 +98,11 @@ function decodeJwtResponse (token)
     return JSON.parse(jsonPayload);
 }
 
-function save_cookie(response)
+function save_cookie(response, exp)
 {
     response_string = JSON.stringify(response);
-    document.cookie = "id_token=" + response_string + "; path=/";
-    console.log(response_string);
+    document.cookie = "id_token=" + response_string + "; expires=" + new Date(exp * 1000).toUTCString() + "; path=/";
+    console.log("id_token=" + response_string + "; expires=" + new Date(exp * 1000).toUTCString() + "; path=/");
 }
 
 function read_cookie(name)

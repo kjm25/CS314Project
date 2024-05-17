@@ -57,20 +57,27 @@ io.on('connection', (socket) =>
 
   socket.on('google_sign', function(token)
   {
-    async function verify() {
-      const ticket = await google_client.verifyIdToken({
-          idToken: token['credential'],
-          audience: CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
-          // Or, if multiple clients access the backend:
-          //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
-      });
-      const verified_payload = ticket.getPayload();
-      const email = verified_payload['email']; 
-      console.log(email, "just was verified to signed in.");
-      server_username = email;
+    async function verify() 
+    {
+      try
+      {
+        const ticket = await google_client.verifyIdToken({
+            idToken: token['credential'],
+            audience: CLIENT_ID,
+        });
+        const verified_payload = ticket.getPayload();
+        const email = verified_payload['email'];
+        console.log(email, "just was verified to signed in.");
+        server_username = email;
+      }
+      catch(err)
+      {
+        console.error(err); //code to be executed if an error occurs
+        console.log(server_username, "failed to login");
+        server_username = "Failed Login"; //might take time to run due to async
+      }
     }
-    verify().catch(console.error);
-
+    verify();
   });
 
   socket.on('disconnect', () => {

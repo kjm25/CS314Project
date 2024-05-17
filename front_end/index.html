@@ -73,8 +73,8 @@
       console.log(email, "just tried to signed in.");
       globalsocket.emit('google_sign', response);
       
-      //try to save token
-      save_cookie(response);
+      //try to save token with expirary date
+      save_cookie(response, responsePayload['exp']);
     }
     </script>
 
