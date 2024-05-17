@@ -102,9 +102,7 @@ function save_cookie(response)
 {
     response_string = JSON.stringify(response);
     document.cookie = "id_token=" + response_string + "; path=/";
-    console.log(response);
     console.log(response_string);
-    console.log(document.cookie);
 }
 
 function read_cookie(name)
@@ -114,9 +112,7 @@ function read_cookie(name)
     for(let i = 0; i < cookie_array.length; i++) {
         let cookie_pairs = cookie_array[i].split("=");
 
-        console.log(cookie_pairs[0] + " pair 0");
         if(name == cookie_pairs[0].trim()) {
-            console.log(JSON.parse(cookie_pairs[1]) + " pair 1");
             globalsocket.emit('google_sign', JSON.parse(cookie_pairs[1]));
         }
     }
