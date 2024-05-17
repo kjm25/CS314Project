@@ -89,30 +89,6 @@ const {OAuth2Client} = require('google-auth-library');
 const CLIENT_ID = "278406872967-ds0j19p8s6gouvvklrma8cmpjicpmnfu.apps.googleusercontent.com"
 const google_client = new OAuth2Client(CLIENT_ID);
 
-/*async function verify(token) {
-  const ticket = await google_client.verifyIdToken({
-      idToken: token,
-      audience: CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
-      // Or, if multiple clients access the backend:
-      //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
-  });
-
-  const payload = ticket.getPayload();
-  const userid = payload['sub'];
-  const email = payload['email']; 
-  console.log(email, "was verified");
-  return payload
-}*/
-
-
-app.post('/auth/google/callback', async (req, res) => {
-  console.log("Someone tried to signed in");
-
-  console.log(req);
-  //res.redirect('/');
-  
-});
-
 
 const port = process.env.PORT || 3000;
 
