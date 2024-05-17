@@ -127,6 +127,8 @@ async function db_send(message, username, chat_id) {
     const testCollection = database.collection("testData");
     const doc = {"User_ID": username, "Chat_ID": chat_id, "Text": message, "Time_Sent": new Date()};
     const result = await testCollection.insertOne(doc);
+  } catch (error) {
+    console.error('An error occurred while connecting to MongoDB', error);
   } finally {
     // Ensures that the client will close when you finish/error
     await client.close();
@@ -145,8 +147,9 @@ async function db_get(chat_id) {
     const database = client.db("testDB")
     const testCollection = database.collection("testData");
     result = await testCollection.find({ Chat_ID: chat_id }).sort({Time_Sent: 1}).project({User_ID:1, Text: 1, Time_Sent: 1}).toArray();
-  } 
-  finally {
+  } catch (error) {
+  console.error('An error occurred while connecting to MongoDB', error);
+  } finally {
     // Ensures that the client will close when you finish/error
     await client.close();
     return result;
