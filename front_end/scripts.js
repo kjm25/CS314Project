@@ -100,7 +100,7 @@ function save_cookie(response, exp)
 {
     response_string = JSON.stringify(response);
     document.cookie = "id_token=" + response_string + "; expires=" + new Date(exp * 1000).toUTCString()
-     + "; SameSite=strict" +"; Secure" + "path=/";
+     + "; SameSite=strict" +"; Secure" + "; path=/";
 }
 
 function read_cookie(name)
