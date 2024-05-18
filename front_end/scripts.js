@@ -85,8 +85,6 @@ function socket_connection()
     });
 } 
 
-
-
 function decodeJwtResponse (token) 
 {//from https://stackoverflow.com/questions/68927855/sign-in-with-google-console-log
     var base64Url = token.split('.')[1];
@@ -101,8 +99,8 @@ function decodeJwtResponse (token)
 function save_cookie(response, exp)
 {
     response_string = JSON.stringify(response);
-    document.cookie = "id_token=" + response_string + "; expires=" + new Date(exp * 1000).toUTCString() + "; path=/";
-    console.log("id_token=" + response_string + "; expires=" + new Date(exp * 1000).toUTCString() + "; path=/");
+    document.cookie = "id_token=" + response_string + "; expires=" + new Date(exp * 1000).toUTCString()
+     + "; SameSite=strict" +"; Secure" + "path=/";
 }
 
 function read_cookie(name)
