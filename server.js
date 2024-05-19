@@ -33,8 +33,15 @@ io.on('connection', (socket) =>
   }, DB_REFRESH_TIME);
 
   const cookies = socket.handshake.headers.cookie;
-  token = JSON.parse(read_cookie("id_token", cookies));
-  verify(token);
+  try
+  {
+    token = JSON.parse(read_cookie("id_token", cookies));
+    verify(token);
+  }
+  catch
+  {
+    console.log("Failed to read cookie");
+  }
 
   socket.on('username', function(username)
   {
@@ -125,7 +132,7 @@ const client = new MongoClient(uri, {
   }
 });
 
-async function db_send(message, username, chat_id) {
+async function db_send(message, username, chat_id, fails) {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
@@ -135,12 +142,12 @@ async function db_send(message, username, chat_id) {
     const database = client.db("testDB")
     const testCollection = database.collection("testData");
     const doc = {"User_ID": username, "Chat_ID": chat_id, "Text": message, "Time_Sent": new Date()};
-    const result = await testCollection.insertOne(doc);
+    await testCollection.insertOne(doc);
   } catch (error) {
     console.error('An error occurred while connecting to MongoDB', error);
   } finally {
     // Ensures that the client will close when you finish/error
-    await client.close();
+    //await client.close(); //don't run - will still be getting data
   }
 }
 
@@ -162,7 +169,7 @@ async function db_get(chat_id, newest_time) {
   console.error('An error occurred while connecting to MongoDB', error);
   } finally {
     // Ensures that the client will close when you finish/error
-    await client.close();
+    //await client.close(); //don't run - will still be getting data
     return result;
   }
 }
