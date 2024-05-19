@@ -33,9 +33,7 @@ io.on('connection', (socket) =>
   }, DB_REFRESH_TIME);
 
   const cookies = socket.handshake.headers.cookie;
-  console.log(cookies);
   token = JSON.parse(read_cookie("id_token", cookies));
-  console.log(token);
   verify(token);
 
   socket.on('username', function(username)
