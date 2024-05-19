@@ -102,16 +102,3 @@ function save_cookie(response, exp)
     document.cookie = "id_token=" + response_string + "; expires=" + new Date(exp * 1000).toUTCString()
      + "; SameSite=strict" +"; Secure" + "; path=/";
 }
-
-function read_cookie(name)
-{
-    console.log("Trying to read cookie");
-    let cookie_array = document.cookie.split(';');
-    for(let i = 0; i < cookie_array.length; i++) {
-        let cookie_pairs = cookie_array[i].split("=");
-
-        if(name == cookie_pairs[0].trim()) {
-            globalsocket.emit('google_sign', JSON.parse(cookie_pairs[1]));
-        }
-    }
-}
