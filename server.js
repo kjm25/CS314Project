@@ -16,6 +16,17 @@ const {OAuth2Client} = require('google-auth-library');
 const CLIENT_ID = "278406872967-ds0j19p8s6gouvvklrma8cmpjicpmnfu.apps.googleusercontent.com"
 const google_client = new OAuth2Client(CLIENT_ID);
 
+const port = process.env.PORT || 3000;
+
+server.listen(port, () => { //list on port
+  console.log(`Server is running on port ${port}`);
+});
+
+app.get('/', (req, res) => {//send page to clients
+  //res.send('<h1>Hello, Express.js Server!</h1>');
+  res.sendFile(path.join(__dirname, 'front_end', 'index.html'));
+});
+
 io.on('connection', (socket) => 
 {
   console.log('a user connected');
@@ -35,7 +46,7 @@ io.on('connection', (socket) =>
   const cookies = socket.handshake.headers.cookie;
   try
   {
-    token = JSON.parse(read_cookie("id_token", cookies));
+    let token = JSON.parse(read_cookie("id_token", cookies));
     verify(token);
   }
   catch
@@ -96,11 +107,6 @@ io.on('connection', (socket) =>
   });
 });
 
-app.get('/', (req, res) => {
-  //res.send('<h1>Hello, Express.js Server!</h1>');
-  res.sendFile(path.join(__dirname, 'front_end', 'index.html'));
-});
-
 function read_cookie(name, cookies)
 {
     console.log("Trying to read cookie");
@@ -112,12 +118,6 @@ function read_cookie(name, cookies)
         }
     }
 }
-
-const port = process.env.PORT || 3000;
-
-server.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
 
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
