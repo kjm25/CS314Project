@@ -2,3 +2,9 @@ h5
 {
     text-transform: capitalize;
 }
+
+.scrollable-container {
+    width: 100%; 
+    height: 60vh; 
+    overflow-y: auto; 
+}

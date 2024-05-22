@@ -75,6 +75,7 @@ class MessageList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {messages: props.messages};
+    this.messagesEndRef = React.createRef();
   }
 
   componentDidMount() {
@@ -93,16 +94,26 @@ class MessageList extends React.Component {
     if (this.props.messages !== prevProps.messages) {
         this.setState({ messages: this.props.messages });
     }
+    this.messagesEndRef.current.scrollIntoView({ });
   }
 
   render() {
-    //TODO set up proper key system over 
-      const listItems = this.state.messages.map((ele, index) =>
-      <li key={index}>
-          {ele}
+    //TODO set up proper key system 
+      const listItems = this.state.messages.map((ele) =>
+      <li key={ele.Time_Sent}>
+          <div className="card w-50 mb-1 border border-0">
+            <div className="card-body pb-0">
+              <div className="d-flex justify-content-between">
+                <h5 className="">{ele.User_ID}</h5>
+                <small className="text-body-secondary">{new Date(ele.Time_Sent).toLocaleString()}</small>
+              </div>
+              <p className="text-bg-warning p-3 rounded">{ele.Text}</p>
+            </div>
+        </div>
+        {<div ref={this.messagesEndRef} />}
       </li>);
       return (
-      <div>
+      <div className="scrollable-container">
           <ul>{listItems}</ul>
       </div>
       );

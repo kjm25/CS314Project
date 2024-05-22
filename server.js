@@ -39,7 +39,7 @@ io.on('connection', (socket) =>
     for (const ele of result)
     {
       newest_time = ele.Time_Sent;
-      socket.emit('chat message', ele.User_ID + ": " + ele.Text);
+      socket.emit('chat message', {"Text": ele.Text, "User_ID": ele.User_ID, "Time_Sent": ele.Time_Sent});
     }
   }, DB_REFRESH_TIME);
 
