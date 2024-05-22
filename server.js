@@ -35,7 +35,7 @@ io.on('connection', (socket) =>
   let newest_time = new Date(0);
 
   let interval = setInterval(async () => { //emit messages from sever
-    let result = await db_get(server_chat_id, newest_time); //db get could take in newest time to see if need get whole data
+    let result = await db_get_messages(server_chat_id, newest_time); //db get could take in newest time to see if need get whole data
     for (const ele of result)
     {
       newest_time = ele.Time_Sent;
@@ -132,7 +132,7 @@ const client = new MongoClient(uri, {
   }
 });
 
-async function db_send(message, username, chat_id, fails) {
+async function db_send(message, username, chat_id) {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
@@ -152,7 +152,7 @@ async function db_send(message, username, chat_id, fails) {
 }
 
 
-async function db_get(chat_id, newest_time) {
+async function db_get_messages(chat_id, newest_time) {
   let result = [];
   try {
     // Connect the client to the server	(optional starting in v4.7)

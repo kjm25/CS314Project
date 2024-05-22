@@ -116,7 +116,7 @@ class MessageList extends React.Component {
       </li>);
       return (
       <div className="scrollable-container">
-          <ul>{listItems}</ul>
+          <ul className="list-style">{listItems}</ul>
       </div>
       );
   }
