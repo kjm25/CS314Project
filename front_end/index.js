@@ -81,7 +81,7 @@ class MessageList extends React.Component {
   componentDidMount() {
     //var socket = io();
     console.log("mounted");
-    window.globalsocket.on('chat message', (msg) =>
+    window.globalsocket.on('chat_message', (msg) =>
     {
       console.log("detected chat message:", msg);
       this.setState(prevState => ({
