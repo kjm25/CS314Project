@@ -83,9 +83,9 @@ class MessageList extends React.Component {
     console.log("mounted");
     window.globalsocket.on('chat message', (msg) =>
     {
-        console.log("detected chat message:", msg);
-        this.setState(prevState => ({
-          messages: [...prevState.messages, msg]
+      console.log("detected chat message:", msg);
+      this.setState(prevState => ({
+        messages: [...prevState.messages, msg]
       }));
     });
   }
@@ -94,11 +94,13 @@ class MessageList extends React.Component {
     if (this.props.messages !== prevProps.messages) {
         this.setState({ messages: this.props.messages });
     }
-    this.messagesEndRef.current.scrollIntoView({ });
+    if (this.messagesEndRef.current)
+    {
+      this.messagesEndRef.current.scrollIntoView({ });
+    }
   }
 
   render() {
-    //TODO set up proper key system 
       const listItems = this.state.messages.map((ele) =>
       <li key={ele.Time_Sent}>
           <div className="card w-50 mb-1 border border-0">
