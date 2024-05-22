@@ -147,7 +147,10 @@ io.on('connection', (socket) =>
 
   socket.on('disconnect', () => {
     console.log('user disconnected');
-    //clearInterval(interval);
+    if(chat_interval)
+      clearInterval(chat_interval);
+    if(message_interval)
+    clearInterval(message_interval);
   });
 });
 
@@ -248,7 +251,7 @@ async function db_get_user(email)
     const database = client.db("testDB")
     const testCollection = database.collection("users");
     const user = await testCollection.findOne({ User_ID: email })
-    if(result === null)
+    if(user === null)
     {
       testCollection.insertOne({"User_ID": email, "Conversations": []});
     }
