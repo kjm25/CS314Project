@@ -113,7 +113,10 @@ io.on('connection', (socket) =>
     console.log(message); 
   
     //call MongoDB
-    db_send(message, server_username, server_chat_id);
+    if(server_chat_id != "" && server_username != "")
+    {
+      db_send(message, server_username, server_chat_id);
+    }
   });
 
   async function verify(token) 
