@@ -1,30 +1,59 @@
-'use strict';
+//import { Hello } from './Components.js';
 
 const e = React.createElement;
 
 class LikeButton extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { liked: false };
-  }
-
-  render() {
-    if (this.state.liked) {
-      return 'You liked this.';
+    constructor(props) {
+      super(props);
+      this.state = { liked: false };
+      this.state = {date: new Date()};
     }
 
-    return e(
-      'button',
-      { onClick: () => this.setState({ liked: true }) },
-      'Like'
-    );
-  }
+    componentDidMount() {
+        this.timerID = setInterval(
+          () => this.tick(),
+          1000
+        );
+      }
+    
+    componentWillUnmount() {
+        clearInterval(this.timerID);
+    }
+
+    tick() {
+        this.setState({
+            date: new Date()
+        });
+    }
+  
+    render() {
+      if (this.state.liked) {
+        return(
+        <div>
+            <h1>You liked this!</h1>
+            <h2>It is {this.state.date.toLocaleTimeString()}.</h2>
+        </div>
+        );
+      }
+    return (
+        <button onClick={() => this.setState({ liked: true })}>
+        Like
+        </button>
+        );
+    }
 }
 
-const domContainer = document.querySelector('#root');
-const root = ReactDOM.createRoot(domContainer);
-root.render(e(LikeButton));
+function App() {
+    return (
+      <div>
+        <LikeButton />
+        <LikeButton />
+        <LikeButton />
+      </div>
+    );
+}
 
-
-/*const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<h1>Hello, world!</h1>);*/
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+//root.render(<LikeButton />);
+//root.render(<h1>Hello from React!</h1>); //replacing this with the commented out lines fails to create an element
