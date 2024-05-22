@@ -56,8 +56,7 @@ class MessageBox extends React.Component {
         event.preventDefault();
         console.log('A chat was submitted: ' + this.state.value);
         window.globalsocket.emit('chat', this.state.value);
-        let messages = document.getElementById('messages');
-        while(messages.firstChild) messages.removeChild(messages.firstChild);//empty on chat change
+        this.props.resetMessages(); // Call the reset method passed down from the parent
     }
 
     render() {
@@ -79,22 +78,28 @@ class MessageList extends React.Component {
   }
 
   componentDidMount() {
-      var socket = io();
-      console.log("mounted");
-      socket.on('chat message', (msg) =>
-      {
-          console.log("detected chat message:", msg);
-          this.setState(prevState => ({
-            messages: [...prevState.messages, msg]
-        }));
-      });
+    //var socket = io();
+    console.log("mounted");
+    window.globalsocket.on('chat message', (msg) =>
+    {
+        console.log("detected chat message:", msg);
+        this.setState(prevState => ({
+          messages: [...prevState.messages, msg]
+      }));
+    });
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.messages !== prevProps.messages) {
+        this.setState({ messages: this.props.messages });
     }
+  }
 
   render() {
-    //TODO set up key system
-      const listItems = this.state.messages.map((number) =>
-      <li key={number.toString()}>
-          {number}
+    //TODO set up proper key system over 
+      const listItems = this.state.messages.map((ele, index) =>
+      <li key={index}>
+          {ele}
       </li>);
       return (
       <div>
@@ -105,10 +110,15 @@ class MessageList extends React.Component {
 }
 
 
-
 class App extends React.Component {
     constructor(props) {
       super(props);
+      this.state = { messages: [] };
+      this.resetMessages = this.resetMessages.bind(this);
+    }
+
+    resetMessages() {
+        this.setState({ messages: [] });
     }
 
     render() {
@@ -117,8 +127,8 @@ class App extends React.Component {
             <LikeButton name="like1" />
             <LikeButton name="like2" />
             <LikeButton name="like3" />
-            <MessageBox  />
-            <MessageList messages={[]} />
+            <MessageBox resetMessages={this.resetMessages} />
+            <MessageList messages={this.state.messages} />
         </div>
         );
     }
@@ -138,6 +148,8 @@ class App extends React.Component {
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<App />);
 //root.render(<LikeButton />);
+
+
 
 
 /* Will's html code

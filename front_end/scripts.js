@@ -69,22 +69,6 @@ const validate_message = function (text)
     return text != "";
 }
 
-function socket_connection()
-{
-    var socket = io();
-    window.globalsocket = socket; //make a global variable of the socket for other functions
-
-    var messages = document.getElementById('messages');
-
-    socket.on('chat message', function(msg) 
-    {
-      var item = document.createElement('li');
-      item.textContent = msg;
-      messages.appendChild(item);
-      window.scrollTo(0, document.body.scrollHeight);
-    });
-} 
-
 function decodeJwtResponse (token) 
 {//from https://stackoverflow.com/questions/68927855/sign-in-with-google-console-log
     var base64Url = token.split('.')[1];

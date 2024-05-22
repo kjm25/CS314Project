@@ -65,11 +65,9 @@
 
     <ul id="messages"></ul>
     
-    <script>
-      window.onload = function() 
-      {
-        socket_connection();
-      }
+    <script>    
+        var socket = io();
+        window.globalsocket = socket;//make a global variable of the socket for other functions
     </script>
 
     <script>  
