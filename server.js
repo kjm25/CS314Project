@@ -30,18 +30,19 @@ app.get('/', (req, res) => {//send page to clients
 io.on('connection', (socket) => 
 {
   console.log('a user connected');
-  let server_username = "Default_user";
-  let server_chat_id = "Default_chat";
+  let server_username = "";
+  let server_chat_id = "";
   let newest_time = new Date(0);
+  let chat_interval = null;
 
-  let interval = setInterval(async () => { //emit messages from sever
+  /*chat_interval = setInterval(async () => { //emit messages from sever
     let result = await db_get_messages(server_chat_id, newest_time); //db get could take in newest time to see if need get whole data
     for (const ele of result)
     {
       newest_time = ele.Time_Sent;
       socket.emit('chat_message', {"Text": ele.Text, "User_ID": ele.User_ID, "Time_Sent": ele.Time_Sent});
     }
-  }, DB_REFRESH_TIME);
+  }, DB_REFRESH_TIME); */
 
   const cookies = socket.handshake.headers.cookie;
   try
@@ -88,12 +89,14 @@ io.on('connection', (socket) =>
       const email = verified_payload['email'];
       console.log(email, "just was verified to signed in.");
       server_username = email;
+      socket.emit('verified', email);
+
     }
     catch(err)
     {
       console.error(err); //code to be executed if an error occurs
       console.log(server_username, "failed to login");
-      server_username = "Failed Login"; //might take time to run due to async
+      server_username = ""; //might take time to run due to async
     }
   }
   socket.on('google_sign', function(token)
@@ -151,6 +154,10 @@ async function db_send(message, username, chat_id) {
   }
 }
 
+async function db_get_user(email)
+{
+
+}
 
 async function db_get_messages(chat_id, newest_time) {
   let result = [];
