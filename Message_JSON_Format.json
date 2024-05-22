@@ -9,30 +9,31 @@
 }
 
 
-// Converstaions
+// Conversations
 {
-	"Conversation_ID": "conversation_id",
+	"_id": "conversation_id",
 	"Members" : [
 		"User_ID" : "Name",
 	],
-	"Last_Updated" : "2024-01-25T12:34:56.789+02:00",
-	"Created" : "2022-01-25T12:34:56.789+02:00",
-	"is_active" : false,
-	"Num_Messages" : 1000,
+	//"Last_Updated" : "2024-01-25T12:34:56.789+02:00",
+	//"Created" : "2022-01-25T12:34:56.789+02:00",
+	//"is_active" : false,
+	//"Num_Messages" : 1000,
 }
 
 
 // Users
 {
 	// Email is the primary key for a user
-	"Email" : "user@email.com",
-	"USER_NAME": "Name",
-	"Contacts" :[
+	"User_ID" : "user@email.com",
+	//"USER_NAME": "Name",
+	/*"Contacts" :[
 		"USER_ID": "author_id",
 		"Custom_Name" : "new_name",
 		"Last_Chatted" : "2022-01-25T12:34:56.789+02:00",
 	],
 	"Blocked" : [
 		"USER_ID": "author_id"
-	]
+	]*/
+	"Conversations": []
 }
