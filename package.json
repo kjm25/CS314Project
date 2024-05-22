@@ -1,10 +1,10 @@
 {
   "name": "cs314project",
   "version": "1.0.0",
-  "description": "",
   "main": "scripts.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -17,11 +17,15 @@
   },
   "homepage": "https://github.com/kjm25/CS314Project#readme",
   "dependencies": {
+    "babel-preset-react": "^6.24.1",
     "express.js": "^1.0.0",
     "google-auth-library": "^9.10.0",
     "mongodb": "^6.5.0",
     "node-fetch": "^3.3.2",
     "node.js": "^0.0.1-security",
     "socket.io": "^4.7.5"
-  }
+  },
+  "devDependencies": {},
+  "keywords": [],
+  "description": ""
 }
