@@ -29,6 +29,83 @@ const FAKE_CONVERSATION_DATA = [
   }
 ];
 
+const FAKE_MESSAGE_DATA = [
+    {
+      "User_ID": "alice@example.com",
+      "Chat_ID": 15647184,
+      "Message_ID": "msg001",
+      "Text": "Hey everyone, how's it going?",
+      "Time_Sent": "2024-01-25T09:15:00.123+02:00",
+      "Reply_To": null
+    },
+    {
+      "User_ID": "bob@example.com",
+      "Chat_ID": 15647184,
+      "Message_ID": "msg002",
+      "Text": "All good here, Alice! How about you?",
+      "Time_Sent": "2024-01-25T09:16:45.456+02:00",
+      "Reply_To": "msg001"
+    },
+    {
+      "User_ID": "charlie@example.com",
+      "Chat_ID": 15647184,
+      "Message_ID": "msg003",
+      "Text": "Just started a new project at work. Excited!",
+      "Time_Sent": "2024-01-25T09:20:30.789+02:00",
+      "Reply_To": null
+    },
+    {
+      "User_ID": "dave@example.com",
+      "Chat_ID": 15647184,
+      "Message_ID": "msg004",
+      "Text": "That's awesome, Charlie! What's it about?",
+      "Time_Sent": "2024-01-25T09:22:15.012+02:00",
+      "Reply_To": "msg003"
+    },
+    {
+      "User_ID": "alice@example.com",
+      "Chat_ID": 15647184,
+      "Message_ID": "msg005",
+      "Text": "I'm good, Bob. Just busy with some errands.",
+      "Time_Sent": "2024-01-25T09:25:50.345+02:00",
+      "Reply_To": "msg002"
+    },
+    {
+      "User_ID": "eva@example.com",
+      "Chat_ID": 15647184,
+      "Message_ID": "msg006",
+      "Text": "Morning everyone! Any weekend plans?",
+      "Time_Sent": "2024-01-25T09:30:10.678+02:00",
+      "Reply_To": null
+    },
+    {
+      "User_ID": "bob@example.com",
+      "Chat_ID": 15647184,
+      "Message_ID": "msg007",
+      "Text": "Not sure yet, Eva. Maybe just relax and watch a movie.",
+      "Time_Sent": "2024-01-25T09:32:55.901+02:00",
+      "Reply_To": "msg006"
+    },
+    {
+      "User_ID": "charlie@example.com",
+      "Chat_ID": 15647184,
+      "Message_ID": "msg008",
+      "Text": "The project is about building a new web app for our clients.",
+      "Time_Sent": "2024-01-25T09:35:40.234+02:00",
+      "Reply_To": "msg004"
+    },
+    {
+      "User_ID": "dave@example.com",
+      "Chat_ID": 15647184,
+      "Message_ID": "msg009",
+      "Text": "Sounds interesting, Charlie. Keep us posted!",
+      "Time_Sent": "2024-01-25T09:37:25.567+02:00",
+      "Reply_To": "msg008"
+    },  
+]
+
+
+
 class SendMessageForm extends React.Component
 {
   constructor (props) {
@@ -74,22 +151,25 @@ class MessageBox extends React.Component
   constructor (props)
   {
     super (props)
-    this.sender = props.sender
-    this.datetime = props.datetime
-    this.message = props.message
+    this.User_ID = props.User_ID
+    this.Chat_ID = props.Chat_ID
+    this.Message_ID = props.Message_ID
+    this.Text = props.Text
+    this.Time_Sent = props.Time_Sent
+    this.Reply_To = props.Reply_To
   }
 
   render ()
   {
     return (
       // Potentially also use border-0
-      <div className="card w-50 mb-1 border --bs-border-color-translucent ">
+      <div className="message-box card w-50 mb-1 border border-0">
         <div className="card-body pb-0">
           <div className="d-flex justify-content-between">
-            <h5 className="">{this.sender}</h5>
-            <small className="text-body-secondary">{this.datetime}</small>
+            <h5 className="">{this.User_ID}</h5>
+            <small className="text-body-secondary">{this.Time_Sent}</small>
           </div>
-          <p className="text-bg-warning p-3 rounded">{this.message}</p>
+          <p className="text-bg-warning p-3 rounded">{this.Text}</p>
         </div>
       </div>
     )
@@ -99,39 +179,47 @@ class MessageBox extends React.Component
 class ConversationWindow extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {messages: props.messages};
+    // this.state = {messages: props.messages};
+    this.state = {messages: FAKE_MESSAGE_DATA}
     this.messagesEndRef = React.createRef();
     this.conversation_id = null
   }
 
-  componentDidMount() {
-    console.log("mounted");
-    window.globalsocket.on('chat_message', (msg) =>
-    {
-      console.log("detected chat message:", msg);
-      this.setState(prevState => ({
-        messages: [...prevState.messages, msg]
-      }));
-    });
-  }
+  // componentDidMount() {
+  //   console.log("mounted");
+  //   window.globalsocket.on('chat_message', (msg) =>
+  //   {
+  //     console.log("detected chat message:", msg);
+  //     this.setState(prevState => ({
+  //       messages: [...prevState.messages, msg]
+  //     }));
+  //   });
+  // }
 
-  componentDidUpdate(prevProps) {
-    if (this.props.messages !== prevProps.messages) {
-        this.setState({ messages: this.props.messages });
-    }
-    if (this.messagesEndRef.current)
-    {
-      this.messagesEndRef.current.scrollIntoView({ });
-    }
-  }
+  // componentDidUpdate(prevProps) {
+  //   if (this.props.messages !== prevProps.messages) {
+  //       this.setState({ messages: this.props.messages });
+  //   }
+  //   if (this.messagesEndRef.current)
+  //   {
+  //     this.messagesEndRef.current.scrollIntoView({ });
+  //   }
+  // }
 
   render ()
   {   
     return (
-      <main className="scrollable-container">
-        {this.state.messages.map( (message) => {
-          <MessageBox sender={message.User_ID} datetime={message.Time_Sent} message={message.Text} /> 
-        })}
+      <main className="conversation-window">
+        {this.state.messages.map( (message) => (
+          <MessageBox 
+            key={message.Message_ID} 
+            User_ID={message.User_ID}
+            Message_ID={message.Message_ID} 
+            Text={message.Text}
+            Time_Sent={message.Time_Sent} 
+            Reply_To={message.Reply_To}
+          />
+        ))}
         <SendMessageForm resetMessages={this.resetMessages} />
       </main>
     );
@@ -282,8 +370,10 @@ class App extends React.Component
     return (
       <>
         <Username />
-        <ConversationsContainer />
-        <ConversationWindow messages={this.state.messages} />
+        <div className="d-flex">
+          <ConversationsContainer className="w-25"/>
+          <ConversationWindow className="w-auto" messages={this.state.messages} />
+        </div>
       </>
     );
   }
