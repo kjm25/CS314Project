@@ -1,3 +1,4 @@
+
 const FAKE_CONVERSATION_DATA = [
   {
     _id: 15647184,
@@ -104,77 +105,42 @@ const FAKE_MESSAGE_DATA = [
     },  
 ]
 
-
-
-class SendMessageForm extends React.Component
+function SendMessageForm ()
 {
-  constructor (props) {
-      super (props);
-      this.state = {value: ''};
-      this.handleChange = this.handleChange.bind(this);
-      this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  handleChange(event) {
-      this.setState({value: event.target.value});
-  }
-
-  handleSubmit (event)
-  {
-    event.preventDefault();
-    
-    // Validate message
-    if (this.state.value != "")
+  const sendMessage = () => {
+    const TEXT = document.getElementById('new-message-input').value
+    // Validate message before sending
+    if (TEXT != "")
     {
-      console.log(`'message' : <text>`);
-      window.globalsocket.emit('message', this.state.value);
+      console.log(`'message' : <${TEXT}>`);
+      window.globalsocket.emit('message', TEXT);
     }
-    
-    // Call the reset method passed down from the parent
-    // this.props.resetMessages(); 
   }
 
-  render ()
-  {
-    return (
-      <div className="input-group mb-3">
-        <input className="form-control" type="text" placeholder="Chaterize" />
-        <button className="btn btn-warning" type="button" id="send-message-btn">Send Message</button>
-      </div>
-    );
-  }
+  return (
+    <div className="input-group mb-3">
+      <input id="new-message-input" className="form-control" type="text" placeholder="Chaterize" />
+      <button className="btn btn-warning" type="button" id="send-message-btn" onClick={sendMessage}>Send Message</button>
+    </div>
+  )
 }
 
 // INCOMPLETE
-class MessageBox extends React.Component
+function MessageBox ( {User_ID, Time_Sent, Text} )
 {
-  constructor (props)
-  {
-    super (props)
-    this.User_ID = props.User_ID
-    this.Chat_ID = props.Chat_ID
-    this.Message_ID = props.Message_ID
-    this.Text = props.Text
-    this.Time_Sent = props.Time_Sent
-    this.Reply_To = props.Reply_To
-  }
-
-  render ()
-  {
-    return (
-      // Potentially also use border-0
-      <div className="message-box card w-50 mb-1 border border-0">
-        <div className="card-body pb-0">
-          <div className="d-flex justify-content-between">
-            <h5 className="">{this.User_ID}</h5>
-            <small className="text-body-secondary">{this.Time_Sent}</small>
-          </div>
-          <p className="text-bg-warning p-3 rounded">{this.Text}</p>
+  return (
+    <div className="message-box card w-50 mb-1 border border-0">
+      <div className="card-body pb-0">
+        <div className="d-flex justify-content-between">
+          <h5 className="">{User_ID}</h5>
+          <small className="text-body-secondary">{Time_Sent}</small>
         </div>
+        <p className="text-bg-warning p-3 rounded">{Text}</p>
       </div>
-    )
-  }
+    </div>
+  )
 }
+
 
 class ConversationWindow extends React.Component {
   constructor(props) {
@@ -211,20 +177,14 @@ class ConversationWindow extends React.Component {
     return (
       <main className="conversation-window">
         {this.state.messages.map( (message) => (
-          <MessageBox 
-            key={message.Message_ID} 
-            User_ID={message.User_ID}
-            Message_ID={message.Message_ID} 
-            Text={message.Text}
-            Time_Sent={message.Time_Sent} 
-            Reply_To={message.Reply_To}
-          />
+          <MessageBox {...message} key={message.Message_ID} />
         ))}
         <SendMessageForm resetMessages={this.resetMessages} />
       </main>
     );
   }
 }
+
 
 class Username extends React.Component
 {
@@ -253,118 +213,61 @@ class Username extends React.Component
   }
 }
 
-
-class NewConversationForm extends React.Component
+function NewConversationButton ()
 {
-  constructor (props)
-  {
-    super (props)
-    this.state = { contacts: [] }
-  }
-
-  handleSubmit (event)
-  {
-    event.preventDefault();
-    
+  const startNewConversation = () => {
     // Parse the input field
-    const STR = event.target[0].value.split(',')
-    CONTACTS = STR.split(",").map ( (contact) => { contact.trim() } )
-    
-    console.log(`'new_chat : <${CONTACTS}`);
+    const STRING_OF_CONTACTS = document.getElementById('newConversationInput').value.split(',')
+
+    // Create an array from the contacts listed in the input field
+    const CONTACTS = STRING_OF_CONTACTS.map( (contact) => contact.trim() )
+
+    // Contact the Server
+    console.log(`'new_chat : <${CONTACTS}>`)
     // window.globalsocket.emit('new_chat', this.state.contacts);
   }
 
-  render ()
-  {
-    return (
-      <div className="hstack g-1">
-        <input id="newConversationInput" type="text" placeholder="New Conversation" name="conversation"/>
-        <button type="button">Create</button>
-      </div>
-      // <form id="newConversationForm" className="" onSubmit={this.handleSubmit}>
-      //   <input id="newConversationInput" type="text" placeholder="New Conversation" name="conversation" />
-      //   <input type="submit" value="Send" />
-      // </form>
-    )
-  }
+  return (
+    <div className="hstack g-1">
+      <input id="newConversationInput" type="text" placeholder="New Conversation" name="conversation"/>
+      <button type="button" onClick={startNewConversation}>Create</button>
+    </div>
+  )
 }
 
-class ConversationListItem extends React.Component
+
+function ConversationListItem ( {_id, unread_messages = false, contacts, date_last_updated, preview_text})
 {
-  constructor (props)
-  {
-    super (props)
-    this.state = {
-      _id: props._id,
-      unread_messages: props.unread_messages || false,
-      contacts: props.contacts,
-      date_last_updated: new Date(props.date_last_updated).toLocaleString(),
-      preview_text: props.preview_text
-    }
+  const requestConversationFromID = () => {
+    console.log(`'chat_id' : <${_id}>`);
+    window.globalsocket.emit('chat_id', _id);
+  };
 
-    // This allows individual ConversationListItems to all individually call 
-    // their versions of the function.
-    this.handleOnClick = this.handleOnClick.bind (this)
-  }
-
-  handleOnClick ()
-  {
-    console.log (`'chat_id' : <${this.state._id}>`)
-    window.globalsocket.emit('chat_id', this.state._id);
-  }
-  
-  render()
-  {
-    return (
-      <div className="text-light p-2 conversation-list-item border border-bottom" onClick={this.handleOnClick}>
-        <div className="d-flex justify-content-between">
-          <h5 className="text-truncate">
-            {this.state.contacts.map((contact) => (
-              contact.split('@')[0]
-            )).join(', ')}
-          </h5>
-          <span>{this.state.date_last_updated}</span>
-        </div>
-        <p>{this.state.preview_text}</p>
+  return (
+    <div className="text-light p-2 conversation-list-item border border-bottom" onClick={requestConversationFromID}>
+      <div className="d-flex justify-content-between">
+        <h5 className="text-truncate">
+          {/* Take the string of contacts, remove their email address (by splitting each contact by the delimiter '@' 
+          and selecting the first item.).  After doing that, join the array of names with a comma and a space. */}
+          { contacts.map((contact) => (contact.split('@')[0])).join(', ') }
+        </h5>
+        <span>{date_last_updated}</span>
       </div>
-    );
-  }
-
+      <p>{preview_text}</p>
+    </div>
+  )
 }
 
-class ConversationsContainer extends React.Component
+function ConversationsContainer ({conversations = FAKE_CONVERSATION_DATA})
 {
-  constructor (props)
-  {
-    super (props)
-    // this.state = { conversations: [] }
-    this.state = { conversations : FAKE_CONVERSATION_DATA }
-  }
-  // componentDidMount ()
-  // {
-  //   window.globalsocket.on('chat_list', (conversations_list) => {
-  //     console.log ("Retrieving Conversations from the Server\n", conversations_list)
-  //     this.setState ({conversations: conversations_list})
-  //   });
-  // }
-
-  render() {
-    return (
-      <nav className="conversation-container vstack gap-3 w-25 bg-dark p-1">
-        <NewConversationForm />
-        {this.state.conversations.map((conversation) => (
-          <ConversationListItem
-            key={conversation._id}
-            _id={conversation._id}
-            unread_messages={conversation.unread_messages}
-            contacts={conversation.contacts}
-            date_last_updated={conversation.date_last_updated}
-            preview_text={conversation.preview_text}
-          />
-        ))}
-      </nav>
-    );
-  }
+  return (
+    <nav className="conversation-container vstack gap-3 w-25 bg-dark p-1">
+      <NewConversationButton />
+      {conversations.map((conversation) => (
+        <ConversationListItem key={conversation._id} {...conversation} />
+      ))}
+    </nav>
+  );
 }
 
 class App extends React.Component
@@ -406,37 +309,3 @@ class App extends React.Component
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<App />);
-//root.render(<LikeButton />);
-
-
-
-
-/* Will's html code
-
-<!-- A Message item -->
-    <div class="card w-50 mb-1 border border-0">
-      <div class="card-body pb-0">
-        <div class="d-flex justify-content-between">
-          <h5 class="">William S</h5>
-          <small class="text-body-secondary">12:34 PM</small>
-        </div>
-        <p class="text-bg-warning p-3 rounded">Brother set had private his letters observe outward resolve. Shutters ye marriage to throwing we as.</p>
-      </div>
-    </div>
-    <!--  -->
-    <div class="card w-50 border border-0">
-      <div class="card-body pb-0">
-        <div class="d-flex justify-content-between">
-          <h5>Kevin m</h5>
-          <small class="text-body-secondary">Jan 1, 2024</small>
-        </div>
-        <p class="text-bg-dark p-3 rounded">What the hell are you saying will?</p>
-      </div>
-    </div>
-
-    <div class="input-group mb-3">
-      <input type="text" class="form-control" placeholder="Chat">
-      <button class="btn btn-warning" type="button" id="message2">Send Message</button>
-    </div>
-
-*/
