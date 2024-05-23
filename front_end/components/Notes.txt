@@ -1,0 +1,12 @@
+
+// Client
+
+// Can Emit google_sign         : server reads cookie
+// Can Emit chat_id             : "chat" : <chat_id>
+// Can Emit new_chat            : "new_chat" : <array_of_emails>
+// Can Emit message             : "message" : <chat_id>, <message_text>, <email>
+// Can Emit delete chat         : "chat" : <chat_id>
+
+
+
+// Server
