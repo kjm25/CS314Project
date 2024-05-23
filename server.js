@@ -204,9 +204,11 @@ async function db_send(message, username, chat_id) {
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB! for send");
     const database = client.db("testDB")
-    const testCollection = database.collection("messages");
+    const messageCollection = database.collection("messages");
     const doc = {"User_ID": username, "Chat_ID": chat_id, "Text": message, "Time_Sent": new Date()};
-    await testCollection.insertOne(doc);
+    messageCollection.insertOne(doc);
+    const chatCollection = database.collection("chats");
+    chatCollection.updateOne({ "_id": new ObjectId(chat_id) }, { "$set": {"Last_Updated" : new Date()} } );
   } catch (error) {
     console.error('An error occurred while connecting to MongoDB', error);
   } finally {
