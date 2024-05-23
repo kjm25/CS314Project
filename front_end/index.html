@@ -42,36 +42,28 @@
     <div id="root"></div>
     <script src="index.js" type="text/babel"></script>
 
-    <form id="message-text" class="send-message-form">
-        <!-- Message Box -->
+    <!-- <form id="message-text" class="send-message-form">
         <input type="text" name="message" id="message" placeholder="Message">
-        <!-- Submit Button -->
         <input type="submit" value="Send" />
-    </form>
+    </form> -->
 
-    <form id="username-text" class="send-message-form">
-        <!-- Message Box -->
+    <!-- <form id="username-text" class="send-message-form">
         <input type="text" name="username" id="username" placeholder="Username">
-        <!-- Submit Button -->
         <input type="submit" value="Send" />
     </form>
 
     <form id="chat-text" class="send-message-form">
-      <!-- Message Box -->
       <input type="text" name="chat" id="chat" placeholder="Chat">
-      <!-- Submit Button -->
       <input type="submit" value="Send" />
-    </form>
-
-    <ul id="messages"></ul>
-    
-    <script>    
-        var socket = io();
-        window.globalsocket = socket;//make a global variable of the socket for other functions
-    </script>
+    </form> -->
 
     <script>  
-    function handleCredentialResponse (response) {
+    var socket = io(); // May switch to const later.
+
+    window.globalsocket = socket; // make a global variable of the socket for other functions
+
+    function handleCredentialResponse (response)
+    {
       // decodeJwtResponse() is a custom function defined by you
       // to decode the credential response.
       const responsePayload = decodeJwtResponse(response.credential)

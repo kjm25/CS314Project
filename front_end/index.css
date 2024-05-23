@@ -14,3 +14,23 @@ h5
     padding:0px;
     margin:0px;
 }
+
+.conversation-container
+{
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.conversation-list-item
+{
+    height: 100px;
+}
+
+.conversation-list-item p
+{
+    width: 70%;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
