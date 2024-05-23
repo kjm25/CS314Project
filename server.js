@@ -43,7 +43,7 @@ io.on('connection', (socket) =>
     {
       return;
     }
-    socket.emit('verified', email);
+    socket.emit('verified', server_username);
     conversations = await db_get_user(server_username);
     socket.emit('chat_list', conversations);
   }, DB_REFRESH_TIME);
