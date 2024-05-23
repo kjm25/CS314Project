@@ -1,31 +1,36 @@
+const SERVER_EMIT_SELECT_CHAT = 'chat'
+const SERVER_RECEIVE_CHAT_LIST = 'chat_list'
+const SERVER_RECEIVE_MESSAGE = 'chat_message'
+const CLIENT_EMIT_MESSAGE = 'message'
+
 
 const FAKE_CONVERSATION_DATA = [
   {
     _id: 15647184,
-    unread_messages: true,
-    contacts: ["will@chaterize.com", "kevin@chaterize.com"],
-    date_last_updated: "2024-05-23T00:00-03:00",
-    preview_text: "An example of the combined"
+    // unread_messages: true,
+    Members: ["will@chaterize.com", "kevin@chaterize.com"],
+    Last_Updated: "2024-05-23T00:00-03:00",
+    Preview_Text: "An example of the combined"
   },
   {
     _id: 26371852,
     unread_messages: false,
-    contacts: ["will@chaterize.com", "sara@chaterize.com", "clare@chaterize.com"],
-    date_last_updated: "2024-01-01T00:00-03:00",
+    Members: ["will@chaterize.com", "sara@chaterize.com", "clare@chaterize.com"],
+    Last_Updated: "2024-01-01T00:00-03:00",
     preview_text: "If the time value includes seconds, it may optionally also include up to 7 decimal digits of fractional seconds, following the pattern hh:mm:ss[.f{1,7}]. This pattern is supported by the Azure Storage APIs, tools, and client libraries. You must use a period rather than commas to delineate the fractional seconds value."
   },
   {
     _id: 356478254,
     unread_messages: false,
-    contacts: ["kevin@chaterize.com", "kelly@chaterize.com", "Korbin@chaterize.com"],
-    date_last_updated: "2024-12-01T12:34-05:06",
+    Members: ["kevin@chaterize.com", "kelly@chaterize.com", "Korbin@chaterize.com"],
+    Last_Updated: "2024-12-01T12:34-05:06",
     preview_text: "An example of the combined"
   },
   {
     _id: 4564728568,
     unread_messages: true,
-    contacts: ["will@chaterize.com", "will@chaterize.com"],
-    date_last_updated: "2024-01-01T00:00-03:00",
+    Members: ["will@chaterize.com", "will@chaterize.com"],
+    Last_Updated: "2024-01-01T00:00-03:00",
     preview_text: "An example of the combined"
   }
 ];
@@ -34,10 +39,10 @@ const FAKE_MESSAGE_DATA = [
     {
       "User_ID": "alice@example.com",
       "Chat_ID": 15647184,
-      "Message_ID": "msg001",
+      // "Message_ID": "msg001",
       "Text": "Hey everyone, how's it going?",
       "Time_Sent": "2024-01-25T09:15:00.123+02:00",
-      "Reply_To": null
+      // "Reply_To": null
     },
     {
       "User_ID": "bob@example.com",
@@ -112,8 +117,8 @@ function SendMessageForm ()
     // Validate message before sending
     if (TEXT != "")
     {
-      console.log(`'message' : <${TEXT}>`);
-      window.globalsocket.emit('message', TEXT);
+      console.log(`'${CLIENT_EMIT_MESSAGE}' : <${TEXT}>`);
+      window.globalsocket.emit(CLIENT_EMIT_MESSAGE, TEXT);
     }
   }
 
@@ -145,39 +150,37 @@ function MessageBox ( {User_ID, Time_Sent, Text} )
 class ConversationWindow extends React.Component {
   constructor(props) {
     super(props);
-    // this.state = {messages: props.messages};
-    this.state = {messages: FAKE_MESSAGE_DATA}
+    this.state = { messages: [] }
     this.messagesEndRef = React.createRef();
     this.conversation_id = null
   }
 
-  // componentDidMount() {
-  //   console.log("mounted");
-  //   window.globalsocket.on('chat_message', (msg) =>
-  //   {
-  //     console.log("detected chat message:", msg);
-  //     this.setState(prevState => ({
-  //       messages: [...prevState.messages, msg]
-  //     }));
-  //   });
-  // }
+  componentDidMount() {
+    window.globalsocket.on(SERVER_RECEIVE_MESSAGE, (msg) =>
+    {
+      console.log(`${SERVER_RECEIVE_MESSAGE}, ${msg}`);
+      this.setState(prevState => ({
+        messages: [...prevState.messages, msg]
+      }));
+    });
+  }
 
-  // componentDidUpdate(prevProps) {
-  //   if (this.props.messages !== prevProps.messages) {
-  //       this.setState({ messages: this.props.messages });
-  //   }
-  //   if (this.messagesEndRef.current)
-  //   {
-  //     this.messagesEndRef.current.scrollIntoView({ });
-  //   }
-  // }
+  componentDidUpdate(prevProps) {
+    if (this.props.messages !== prevProps.messages) {
+        this.setState({ messages: this.props.messages });
+    }
+    if (this.messagesEndRef.current)
+    {
+      this.messagesEndRef.current.scrollIntoView({ });
+    }
+  }
 
   render ()
   {   
     return (
       <main className="conversation-window">
         {this.state.messages.map( (message) => (
-          <MessageBox {...message} key={message.Message_ID} />
+          <MessageBox {...message} key={message.Time_Sent} />
         ))}
         <SendMessageForm resetMessages={this.resetMessages} />
       </main>
@@ -213,6 +216,10 @@ class Username extends React.Component
   }
 }
 
+
+// Add current user as one of the contacts.
+// Verify that all contacts contain email address
+// ** Later Update: Verify that a conversation with the current contacts doesn't already exist.
 function NewConversationButton ()
 {
   const startNewConversation = () => {
@@ -273,12 +280,14 @@ function PreviewText ({ unread_messages, preview_text})
 }
 
 
-function ConversationListItem ( {_id, unread_messages = false, contacts, date_last_updated, preview_text})
+function ConversationListItem ( {_id, unread_messages = false, Members, Time_Sent, preview_text})
 {
   const requestConversationFromID = () => {
-    console.log(`'chat_id' : <${_id}>`);
-    window.globalsocket.emit('chat_id', _id);
+    console.log(`SERVER_EMIT_SELECT_CHAT : <${_id}>`);
+    window.globalsocket.emit(SERVER_EMIT_SELECT_CHAT, _id);
   };
+
+  console.log(Members)
 
   return (
     <div className="text-light p-2 conversation-list-item border border-bottom" onClick={requestConversationFromID}>
@@ -286,25 +295,56 @@ function ConversationListItem ( {_id, unread_messages = false, contacts, date_la
         <h5 className="text-truncate">
           {/* Take the string of contacts, remove their email address (by splitting each contact by the delimiter '@' 
           and selecting the first item.).  After doing that, join the array of names with a comma and a space. */}
-          { contacts.map((contact) => (contact.split('@')[0])).join(', ') }
+          { Members.map((contact) => (contact.split('@')[0])).join(', ') }
         </h5>
-        <DateTime datetime={date_last_updated} />
+        {/* <DateTime datetime={Time_Sent} /> */}
       </div>
       <PreviewText unread_messages={unread_messages} preview_text={preview_text} />
     </div>
   )
 }
 
-function ConversationsContainer ({conversations = FAKE_CONVERSATION_DATA})
+// function ConversationsContainer ({conversations})
+// {
+//   return (
+//     <nav className="conversation-container vstack gap-3 w-25 bg-dark p-1">
+//       <NewConversationButton />
+//       {conversations.map((conversation) => (
+//         <ConversationListItem key={conversation._id} {...conversation} />
+//       ))}
+//     </nav>
+//   )
+// }
+
+class ConversationsContainer extends React.Component
 {
-  return (
-    <nav className="conversation-container vstack gap-3 w-25 bg-dark p-1">
-      <NewConversationButton />
-      {conversations.map((conversation) => (
-        <ConversationListItem key={conversation._id} {...conversation} />
-      ))}
-    </nav>
-  );
+  constructor (props)
+  {
+    super (props)
+    this.state = {
+      conversations : []
+    }
+  }
+
+  componentDidMount ()
+  {
+    window.globalsocket.on(SERVER_RECEIVE_CHAT_LIST, (chat) => { 
+      this.setState( {conversations: chat });
+    });
+  }
+
+  render ()
+  {
+    return (
+      <nav className="conversation-container vstack gap-3 w-25 bg-dark p-1">
+        <NewConversationButton />
+        {this.state.conversations.map((conversation) => (
+          <ConversationListItem key={conversation._id} {...conversation} />
+        ))}
+      </nav>
+    )
+  }
+
 }
 
 class App extends React.Component
