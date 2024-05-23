@@ -37,20 +37,18 @@ io.on('connection', (socket) =>
   let message_interval = 0;
   let conversations = [];
 
-  
 
-  chat_interval = setInterval(async () => { //emit messages from sever
+  chat_interval = setInterval(async () => { //emit chat list
     if(server_username === "")
     {
       return;
     }
     conversations = await db_get_user(server_username);
-    console.log(conversations);
     socket.emit('chat_list', conversations);
   }, DB_REFRESH_TIME);
 
   message_interval = setInterval(async () => { //emit messages
-    if(server_chat_id === "")
+    if(server_chat_id === "" || server_username === "")
     {
       return;
     }
@@ -73,7 +71,7 @@ io.on('connection', (socket) =>
     console.log("Failed to read cookie");
   }
 
-  socket.on('username', function(username)
+  socket.on('username', function(username)//TODO remove
   {
     console.log(username);
     server_username = username;
@@ -82,9 +80,12 @@ io.on('connection', (socket) =>
 
   socket.on('chat', function(chat_id)
   {
-    console.log(chat_id);
     newest_time = new Date(0);
-    if(chat_id in conversations)
+    
+    function ID_Present(element) {
+      return chat_id == element["_id"];
+    }
+    if(conversations.some(ID_Present))
     {
       server_chat_id = chat_id;
     }
@@ -98,13 +99,29 @@ io.on('connection', (socket) =>
   {
     console.log(member_list);
     newest_time = new Date(0);
-    if(!(server_username in member_list))
+    if(!(member_list.includes(server_username)))
     {
       console.log("Must be a member of the chat");
     }
     else
     {
+      console.log("making chat");
       server_chat_id = await db_make_chat(member_list)
+    }
+  });
+
+  socket.on('delete_chat', function(chat_id)
+  {
+    function ID_Present(element) {
+      return chat_id == element["_id"];
+    }
+    if(conversations.some(ID_Present))
+    {
+      db_delete_chat(chat_id);
+    }
+    else
+    {
+      console.log("Chat not in current chats for removal");
     }
   });
 
@@ -156,7 +173,6 @@ io.on('connection', (socket) =>
 
 function read_cookie(name, cookies)
 {
-    console.log("Trying to read cookie");
     let cookie_array = cookies.split(';');
     for(let i = 0; i < cookie_array.length; i++) {
         let cookie_pairs = cookie_array[i].split("=");
@@ -167,7 +183,7 @@ function read_cookie(name, cookies)
 }
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const { channel } = require('diagnostics_channel');
 const uri = "mongodb+srv://kjm25:CR0Uf4mzLeSBm2Ou@cs314server.6ts6q8f.mongodb.net/?retryWrites=true&w=majority&appName=CS314Server";
 
@@ -211,11 +227,10 @@ async function db_make_chat(member_list)
     const database = client.db("testDB")
     const chatCollection = database.collection("chats");
     const userCollection = database.collection("users");
-    let chat_id = await chatCollection.insertOne({"Members" : member_list});
-    console.log(chat_id);
-    result = chat_id["insertedId"];
-    console.log(result);
-    if(result = 0)
+    console.log("Creating conversation");
+    let chat_id = await chatCollection.insertOne({"Members" : member_list, "Last_Updated": new Date()});
+    result = chat_id.insertedId;
+    if(result == 0)
     {
       console.log("failed to create")
       return;
@@ -225,13 +240,49 @@ async function db_make_chat(member_list)
     {
       try
       {
-        userCollection.updateOne({ "User_id": member }, { $push: { Conversations: result } });
+        console.log("trying to push", result, "to member", member);
+        userCollection.updateOne({ "User_ID": member }, { $push: { "Conversations": result.valueOf() } });
       }
       catch
       {
         console.log("failed to update a user");
       }
     }
+  } catch (error) {
+    console.error('An error occurred while connecting to MongoDB', error);
+  } finally {
+    // Ensures that the client will close when you finish/error
+    //await client.close(); //don't run - will still be getting data
+  }
+}
+
+async function db_delete_chat(chat_id)
+{
+  try {
+    // Connect the client to the server	(optional starting in v4.7)
+    await client.connect();
+    // Send a ping to confirm a successful connection
+    await client.db("admin").command({ ping: 1 });
+    console.log("Pinged your deployment. You successfully connected to MongoDB! for send");
+    const database = client.db("testDB")
+    const chatCollection = database.collection("chats");
+    const userCollection = database.collection("users");
+    const messageCollection = database.collection("messages");
+
+    console.log("starting deletion on", chat_id);
+    let members = await chatCollection.findOne({"_id": new ObjectId(chat_id)});
+    console.log("members are", members["Members"]);
+
+    for (const member of members["Members"])//delete out of member's conversation list
+    {
+      console.log("is a member", member);
+      userCollection.updateMany({"User_ID": member}, { $pull: { "Conversations": new ObjectId(chat_id) } })
+    }
+
+    messageCollection.deleteMany({"Chat_ID": chat_id});//delete messages 
+
+    chatCollection.deleteOne({"_id": new ObjectId(chat_id)}); //delete chat
+
   } catch (error) {
     console.error('An error occurred while connecting to MongoDB', error);
   } finally {
@@ -249,16 +300,22 @@ async function db_get_user(email)
     await client.db("admin").command({ ping: 1 });
     //console.log("Pinged your deployment. You successfully connected to MongoDB!");
     const database = client.db("testDB")
-    const testCollection = database.collection("users");
-    const user = await testCollection.findOne({ User_ID: email })
+    const userCollection = database.collection("users");
+    const chatCollection = database.collection("chats");
+    const user = await userCollection.findOne({ User_ID: email });
     if(user === null)
     {
-      testCollection.insertOne({"User_ID": email, "Conversations": []});
+      console.log("user getting added");
+      userCollection.insertOne({"User_ID": email, "Conversations": []});
     }
     else
     {
-      result = user["Conversations"];
-    }
+      conversation_list = user["Conversations"];
+      result = await chatCollection.find({"_id": {$in: conversation_list} }).
+        sort({Last_Updated: 1}).toArray();
+
+        //result = await userCollection
+  }
   } catch (error) {
     console.error('An error occurred while connecting to MongoDB', error);
   } finally {

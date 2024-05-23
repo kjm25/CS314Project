@@ -2,10 +2,10 @@
 {
 	"User_ID" : "user@email.com",
 	"Chat_ID": "conversation_id",
-	"Message_ID": "message_id",
+	//"Message_ID": "message_id",
 	"Text": "the text of the message",
 	"Time_Sent": "2024-01-25T12:34:56.789+02:00",
-	"Reply_To" : "Message_ID"
+	//"Reply_To" : "Message_ID"
 }
 
 
@@ -15,7 +15,7 @@
 	"Members" : [
 		"User_ID" : "Name",
 	],
-	//"Last_Updated" : "2024-01-25T12:34:56.789+02:00",
+	"Last_Updated" : "2024-01-25T12:34:56.789+02:00",
 	//"Created" : "2022-01-25T12:34:56.789+02:00",
 	//"is_active" : false,
 	//"Num_Messages" : 1000,
@@ -37,3 +37,23 @@
 	]*/
 	"Conversations": []
 }
+
+/* example backend interaction code (testing code used in index.html)
+
+let selected_chat = false;
+//test socket code for backend
+socket.on('chat_list', (chat_list) =>
+	{
+	console.log("got chat_list:", chat_list);
+	if(!selected_chat)
+	{
+		socket.emit('chat', chat_list[0]["_id"]);
+		//socket.emit('delete_chat', chat_list[0]["_id"])
+		selected_chat = !selected_chat;
+	}
+	})
+
+//socket.emit('new_chat', ["kjm25@pdx.edu", "willschw@pdx.edu"]);
+*/
+
+	
