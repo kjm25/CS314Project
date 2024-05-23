@@ -126,7 +126,7 @@ class SendMessageForm extends React.Component
     // Validate message
     if (this.state.value != "")
     {
-      console.log('A chat was submitted: ' + this.state.value);
+      console.log(`'message' : <text>`);
       window.globalsocket.emit('message', this.state.value);
     }
     
@@ -268,21 +268,23 @@ class NewConversationForm extends React.Component
     
     // Parse the input field
     const STR = event.target[0].value.split(',')
-    CONTACTS = STR.split(",").map ( (contact) => {
-      contact.trim()
-    })
-      console.log('A new conversation was started with: ' + contact);
-
+    CONTACTS = STR.split(",").map ( (contact) => { contact.trim() } )
+    
+    console.log(`'new_chat : <${CONTACTS}`);
     // window.globalsocket.emit('new_chat', this.state.contacts);
   }
 
   render ()
   {
     return (
-      <form id="newConversationForm" className="" onSubmit={this.handleSubmit}>
-        <input id="newConversationInput" type="text" placeholder="New Conversation" name="conversation" />
-        <input type="submit" value="Send" />
-      </form>
+      <div className="hstack g-1">
+        <input id="newConversationInput" type="text" placeholder="New Conversation" name="conversation"/>
+        <button type="button">Create</button>
+      </div>
+      // <form id="newConversationForm" className="" onSubmit={this.handleSubmit}>
+      //   <input id="newConversationInput" type="text" placeholder="New Conversation" name="conversation" />
+      //   <input type="submit" value="Send" />
+      // </form>
     )
   }
 }
@@ -293,28 +295,39 @@ class ConversationListItem extends React.Component
   {
     super (props)
     this.state = {
+      _id: props._id,
       unread_messages: props.unread_messages || false,
       contacts: props.contacts,
       date_last_updated: new Date(props.date_last_updated).toLocaleString(),
       preview_text: props.preview_text
     }
+
+    // This allows individual ConversationListItems to all individually call 
+    // their versions of the function.
+    this.handleOnClick = this.handleOnClick.bind (this)
+  }
+
+  handleOnClick ()
+  {
+    console.log (`'chat_id' : <${this.state._id}>`)
+    window.globalsocket.emit('chat_id', this.state._id);
   }
   
-  render ()
+  render()
   {
     return (
-      <div className="text-light p-2 conversation-list-item border border-bottom">
+      <div className="text-light p-2 conversation-list-item border border-bottom" onClick={this.handleOnClick}>
         <div className="d-flex justify-content-between">
           <h5 className="text-truncate">
-            {this.state.contacts.map ((contact) => (
+            {this.state.contacts.map((contact) => (
               contact.split('@')[0]
-            )).join(', ') }
+            )).join(', ')}
           </h5>
           <span>{this.state.date_last_updated}</span>
         </div>
         <p>{this.state.preview_text}</p>
       </div>
-    )
+    );
   }
 
 }
@@ -342,6 +355,7 @@ class ConversationsContainer extends React.Component
         {this.state.conversations.map((conversation) => (
           <ConversationListItem
             key={conversation._id}
+            _id={conversation._id}
             unread_messages={conversation.unread_messages}
             contacts={conversation.contacts}
             date_last_updated={conversation.date_last_updated}
