@@ -43,6 +43,7 @@ io.on('connection', (socket) =>
     {
       return;
     }
+    socket.emit('verified', email);
     conversations = await db_get_user(server_username);
     socket.emit('chat_list', conversations);
   }, DB_REFRESH_TIME);
@@ -70,13 +71,6 @@ io.on('connection', (socket) =>
   {
     console.log("Failed to read cookie");
   }
-
-  socket.on('username', function(username)//TODO remove
-  {
-    console.log(username);
-    server_username = username;
-    newest_time = new Date(0);
-  });
 
   socket.on('chat', function(chat_id)
   {
