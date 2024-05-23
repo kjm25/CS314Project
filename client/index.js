@@ -4,7 +4,7 @@ const FAKE_CONVERSATION_DATA = [
     _id: 15647184,
     unread_messages: true,
     contacts: ["will@chaterize.com", "kevin@chaterize.com"],
-    date_last_updated: "2024-01-01T00:00-03:00",
+    date_last_updated: "2024-05-23T00:00-03:00",
     preview_text: "An example of the combined"
   },
   {
@@ -133,7 +133,7 @@ function MessageBox ( {User_ID, Time_Sent, Text} )
       <div className="card-body pb-0">
         <div className="d-flex justify-content-between">
           <h5 className="">{User_ID}</h5>
-          <small className="text-body-secondary">{Time_Sent}</small>
+          <DateTime datetime={Time_Sent} />
         </div>
         <p className="text-bg-warning p-3 rounded">{Text}</p>
       </div>
@@ -236,6 +236,43 @@ function NewConversationButton ()
 }
 
 
+function DateTime ( {datetime})
+{
+  let formatter
+  const todaysDate = new Date()
+  const date = new Date(datetime)
+
+  // Compare the two dates, if the duration is more than a day, display 'Month Day', 
+  // otherwise, display 'hh:mm'
+  // Gets the milliseconds difference between the two dates.
+  const timeDiff = Math.abs(todaysDate.getTime() - date.getTime());
+  // Convert to hours
+  const hoursDiff = Math.ceil(timeDiff / (1000 * 60 * 60));
+  
+  if (hoursDiff > 24)
+  {
+    formatter = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' })
+  }
+  else
+  {
+    formatter = new Intl.DateTimeFormat('en-US', { timeStyle: "short" })
+  }
+
+  const formattedDate = formatter.format(date);
+  return <span>{formattedDate}</span>
+}
+
+
+function PreviewText ({ unread_messages, preview_text})
+{
+  if (unread_messages)
+  {
+    return <p><strong>{preview_text}</strong></p>
+  }
+  return <p>{preview_text}</p>
+}
+
+
 function ConversationListItem ( {_id, unread_messages = false, contacts, date_last_updated, preview_text})
 {
   const requestConversationFromID = () => {
@@ -251,9 +288,9 @@ function ConversationListItem ( {_id, unread_messages = false, contacts, date_la
           and selecting the first item.).  After doing that, join the array of names with a comma and a space. */}
           { contacts.map((contact) => (contact.split('@')[0])).join(', ') }
         </h5>
-        <span>{date_last_updated}</span>
+        <DateTime datetime={date_last_updated} />
       </div>
-      <p>{preview_text}</p>
+      <PreviewText unread_messages={unread_messages} preview_text={preview_text} />
     </div>
   )
 }
