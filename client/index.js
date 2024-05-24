@@ -256,13 +256,13 @@ function DateTime ( {datetime})
   // Convert to hours
   const hoursDiff = Math.ceil(timeDiff / (1000 * 60 * 60));
   
-  if (hoursDiff > 24)
+  if (hoursDiff > 16)
   {
-    formatter = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' })
+    formatter = new Intl.DateTimeFormat('en-US', {  month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' });
   }
   else
   {
-    formatter = new Intl.DateTimeFormat('en-US', { timeStyle: "short" })
+    formatter = new Intl.DateTimeFormat('en-US', { timeStyle: "short" });
   }
 
   const formattedDate = formatter.format(date);
@@ -280,7 +280,7 @@ function PreviewText ({ unread_messages, preview_text})
 }
 
 
-function ConversationListItem ( {_id, unread_messages = false, Members, Time_Sent, Last_Message})
+function ConversationListItem ( {_id, unread_messages = false, Members, Last_Updated, Last_Message})
 {
   const requestConversationFromID = () => {
     console.log(`SERVER_EMIT_SELECT_CHAT : <${_id}>`);
@@ -297,7 +297,7 @@ function ConversationListItem ( {_id, unread_messages = false, Members, Time_Sen
           and selecting the first item.).  After doing that, join the array of names with a comma and a space. */}
           { Members.map((contact) => (contact.split('@')[0])).join(', ') }
         </h5>
-        {/* <DateTime datetime={Time_Sent} /> */}
+        <DateTime datetime={Last_Updated} /> 
       </div>
       <PreviewText unread_messages={unread_messages} preview_text={Last_Message} />
     </div>
