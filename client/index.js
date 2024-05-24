@@ -280,7 +280,7 @@ function PreviewText ({ unread_messages, preview_text})
 }
 
 
-function ConversationListItem ( {_id, unread_messages = false, Members, Time_Sent, preview_text})
+function ConversationListItem ( {_id, unread_messages = false, Members, Time_Sent, Last_Message})
 {
   const requestConversationFromID = () => {
     console.log(`SERVER_EMIT_SELECT_CHAT : <${_id}>`);
@@ -299,7 +299,7 @@ function ConversationListItem ( {_id, unread_messages = false, Members, Time_Sen
         </h5>
         {/* <DateTime datetime={Time_Sent} /> */}
       </div>
-      <PreviewText unread_messages={unread_messages} preview_text={preview_text} />
+      <PreviewText unread_messages={unread_messages} preview_text={Last_Message} />
     </div>
   )
 }

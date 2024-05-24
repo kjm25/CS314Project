@@ -161,7 +161,7 @@ io.on('connection', (socket) =>
     if(chat_interval)
       clearInterval(chat_interval);
     if(message_interval)
-    clearInterval(message_interval);
+      clearInterval(message_interval);
   });
 });
 
@@ -202,7 +202,7 @@ async function db_send(message, username, chat_id) {
     const doc = {"User_ID": username, "Chat_ID": chat_id, "Text": message, "Time_Sent": new Date()};
     messageCollection.insertOne(doc);
     const chatCollection = database.collection("chats");
-    chatCollection.updateOne({ "_id": new ObjectId(chat_id) }, { "$set": {"Last_Updated" : new Date()} } );
+    chatCollection.updateOne({ "_id": new ObjectId(chat_id) }, { "$set": {"Last_Updated" : new Date(), "Last_Message": message} } );
   } catch (error) {
     console.error('An error occurred while connecting to MongoDB', error);
   } finally {
@@ -224,7 +224,7 @@ async function db_make_chat(member_list)
     const chatCollection = database.collection("chats");
     const userCollection = database.collection("users");
     console.log("Creating conversation");
-    let chat_id = await chatCollection.insertOne({"Members" : member_list, "Last_Updated": new Date()});
+    let chat_id = await chatCollection.insertOne({"Members" : member_list, "Last_Updated": new Date(), "Last_Message": ""});
     result = chat_id.insertedId;
     if(result == 0)
     {
@@ -237,7 +237,15 @@ async function db_make_chat(member_list)
       try
       {
         console.log("trying to push", result, "to member", member);
-        userCollection.updateOne({ "User_ID": member }, { $push: { "Conversations": result.valueOf() } });
+        //userCollection.updateOne({ "User_ID": member }, { $push: { "Conversations": result.valueOf() } });
+        userCollection.updateOne(
+          { "User_ID": member },
+          {
+            $addToSet: { "Conversations": result.valueOf() },
+            $setOnInsert: { "Conversations": [result.valueOf()] }
+          },
+          { upsert: true }
+        );
       }
       catch
       {
@@ -308,7 +316,7 @@ async function db_get_user(email)
     {
       conversation_list = user["Conversations"];
       result = await chatCollection.find({"_id": {$in: conversation_list} }).
-        sort({Last_Updated: 1}).toArray();
+        sort({Last_Updated: -1}).toArray();
 
         //result = await userCollection
   }
