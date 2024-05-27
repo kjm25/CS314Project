@@ -3,6 +3,35 @@ const SERVER_RECEIVE_CHAT_LIST = 'chat_list'
 const SERVER_RECEIVE_MESSAGE = 'chat_message'
 const CLIENT_EMIT_MESSAGE = 'message'
 
+class App extends React.Component
+{
+  constructor(props) {
+    super(props);
+    this.state = { messages: [] };
+    this.resetMessages = this.resetMessages.bind(this);
+  }
+
+  resetMessages() {
+      this.setState({ messages: [] });
+  }
+
+  render()
+  {
+    return (
+      <>
+        <Username />
+        <div className="d-flex">
+          <ConversationsContainer className="w-25" resetMessages={this.resetMessages}/>
+          <ConversationWindow className="w-auto" messages={this.state.messages} />
+        </div>
+      </>
+    );
+  }
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+
 function SendMessageForm ()
 {
   const sendMessage = () => {
@@ -12,6 +41,7 @@ function SendMessageForm ()
     {
       console.log(`'${CLIENT_EMIT_MESSAGE}' : <${TEXT}>`);
       window.globalsocket.emit(CLIENT_EMIT_MESSAGE, TEXT);
+      document.getElementById('new-message-input').value = "";
     }
   }
 
@@ -72,9 +102,12 @@ class ConversationWindow extends React.Component {
   {   
     return (
       <main className="conversation-window">
-        {this.state.messages.map( (message) => (
-          <MessageBox {...message} key={message.Time_Sent} />
-        ))}
+        <div className="messages-container">
+          {this.state.messages.map( (message) => (
+            
+            <MessageBox {...message} key={message.Time_Sent} />
+          ))}
+        </div>
         <SendMessageForm resetMessages={this.resetMessages} />
         {<div ref={this.messagesEndRef} />}
       </main>
@@ -95,7 +128,6 @@ class Username extends React.Component
     window.globalsocket.on('verified', (set_username) => {
       
       // Display welcome message to the username
-      console.log("welcome ", set_username);
       this.setState({ username: set_username });
     });
   }
@@ -114,26 +146,50 @@ class Username extends React.Component
 // Add current user as one of the contacts.
 // Verify that all contacts contain email address
 // ** Later Update: Verify that a conversation with the current contacts doesn't already exist.
-function NewConversationButton ()
+class NewConversationButton extends React.Component
 {
-  const startNewConversation = () => {
-    // Parse the input field
-    const STRING_OF_CONTACTS = document.getElementById('newConversationInput').value.split(',')
-
-    // Create an array from the contacts listed in the input field
-    const CONTACTS = STRING_OF_CONTACTS.map( (contact) => contact.trim() )
-
-    // Contact the Server
-    console.log(`'new_chat : <${CONTACTS}>`)
-    // window.globalsocket.emit('new_chat', this.state.contacts);
+  constructor (props)
+  {
+    super (props);
+    this.name = "";
   }
 
-  return (
-    <div className="hstack g-1">
-      <input id="newConversationInput" type="text" placeholder="New Conversation" name="conversation"/>
-      <button type="button" onClick={startNewConversation}>Create</button>
-    </div>
-  )
+  componentDidMount() {
+    window.globalsocket.on('verified', (set_username) => {
+      this.name = set_username;
+    });
+  }
+
+  startNewConversation = () =>
+  {
+    // Parse the input field
+    let array_of_contacts = document.getElementById('newConversationInput').value
+      .split(/[ ,]+/).filter((ele) => ele.includes("@") );
+
+    document.getElementById('newConversationInput').value = "";
+
+    // Create an array from the contacts listed in the input field
+    array_of_contacts = array_of_contacts.map( (contact) => contact.trim() );
+    if(this.name == "" || array_of_contacts.length == 0)
+    {
+      return;
+    }
+  
+    array_of_contacts.unshift(this.name);
+    console.log("new_chat :", array_of_contacts);
+    window.globalsocket.emit('new_chat', array_of_contacts);
+    
+}
+
+  render () 
+  {
+    return (
+      <div className="hstack g-1">
+        <input id="newConversationInput" type="text" placeholder="New Conversation" name="conversation"/>
+        <button type="button" onClick={this.startNewConversation}>Create</button>
+      </div>
+    )
+  } 
 }
 
 
@@ -181,8 +237,6 @@ function ConversationListItem ( {_id, unread_messages = false, Members, Last_Upd
     window.globalsocket.emit(SERVER_EMIT_SELECT_CHAT, _id);
     resetMessages();
   };
-
-  console.log(Members)
 
   return (
     <div className="text-light p-2 conversation-list-item border border-bottom" onClick={requestConversationFromID}>
@@ -242,43 +296,3 @@ class ConversationsContainer extends React.Component
   }
 
 }
-
-class App extends React.Component
-{
-  constructor(props) {
-    super(props);
-    this.state = { messages: [] };
-    this.resetMessages = this.resetMessages.bind(this);
-  }
-
-  resetMessages() {
-      this.setState({ messages: [] });
-  }
-
-  render()
-  {
-    return (
-      <>
-        <Username />
-        <div className="d-flex">
-          <ConversationsContainer className="w-25" resetMessages={this.resetMessages}/>
-          <ConversationWindow className="w-auto" messages={this.state.messages} />
-        </div>
-      </>
-    );
-  }
-}
-
-/*function App() {
-    return (
-      <div>
-        <LikeButton name="like1"/>
-        <LikeButton name="like2"/>
-        <LikeButton name="like3"/>
-        <MessageBox />
-      </div>
-    );
-}*/
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App />);

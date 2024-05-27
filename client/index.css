@@ -1,6 +1,6 @@
 h5
 {
-    text-transform: capitalize;
+    /*text-transform: capitalize; email adresses look better without capitals and helps testing*/
 }
 
 .conversation-window
@@ -8,6 +8,8 @@ h5
     width: 70%;
     height: 80vh; 
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .message-box
@@ -34,4 +36,11 @@ h5
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+}
+
+.messages-container
+{
+    position: sticky;
+    bottom: 0;
+    flex: 1;
 }

@@ -242,7 +242,7 @@ async function db_make_chat(member_list)
           { "User_ID": member },
           {
             $addToSet: { "Conversations": result.valueOf() },
-            $setOnInsert: { "Conversations": [result.valueOf()] }
+            //$setOnInsert: { "Conversations": [result.valueOf()] }
           },
           { upsert: true }
         );
