@@ -14,7 +14,7 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
   </head>
-  <body>
+  <body class="no-scroll">
 
     <div class="google-sign" id="googleButton"></div>
 
@@ -57,7 +57,8 @@
         save_cookie(response, responsePayload['exp']);
       }
 
-      window.onload = function () {
+      window.onload = function () 
+      {
         google.accounts.id.initialize({
           client_id: '278406872967-ds0j19p8s6gouvvklrma8cmpjicpmnfu.apps.googleusercontent.com',
           callback: handleCredentialResponse,

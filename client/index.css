@@ -6,7 +6,9 @@ h5
 .conversation-window
 {
     width: 70%;
-    height: 80vh; 
+    height: calc(100vh - 46px); 
+    /*should be - 44px which is height of the top elements, but 2 extra pixels come from somewhere*/
+    padding: 0px 0px 0px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -19,7 +21,8 @@ h5
 
 .conversation-container
 {
-    height: 80vh;
+    height: calc(100vh - 46px);
+    padding: 0px 0px 0px;
     overflow-y: auto;
 }
 
@@ -48,9 +51,23 @@ h5
 .google-sign
 {
     float: left; /* don't be alone at the top */
+    padding: 0px 0px 0px;
 }
 
 .logout-button
 {
     height: 44px;
+    float: right;
+    padding: 0px 0px 0px;
+}
+
+.username
+{
+    font-size: 32px;
+    padding: 0px 0px 0px;
+}
+
+.no-scroll 
+{
+    overflow:hidden; /* used for main body */
 }

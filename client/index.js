@@ -151,7 +151,7 @@ class Username extends React.Component
   constructor (props)
   {
     super (props);
-    this.state = {username : ""};
+    this.state = {username : "Please Login"};
   }
 
   componentDidMount() {
@@ -166,7 +166,7 @@ class Username extends React.Component
   {
     return (
       <>
-        <h1>{this.state.username}</h1>
+        <h1 className="username " >{this.state.username}</h1>
       </> 
     )
   }
@@ -205,7 +205,8 @@ class NewConversationButton extends React.Component
       return;
     }
   
-    array_of_contacts.unshift(this.name);
+    array_of_contacts.unshift(this.name); //add user's name to the list
+    array_of_contacts = [...new Set(array_of_contacts)]; //remove any duplicates
     console.log("new_chat :", array_of_contacts);
     window.globalsocket.emit('new_chat', array_of_contacts);
     
@@ -215,8 +216,8 @@ class NewConversationButton extends React.Component
   {
     return (
       <div className="hstack g-1">
-        <input id="newConversationInput" type="text" placeholder="New Conversation" name="conversation"/>
-        <button type="button" onClick={this.startNewConversation}>Create</button>
+        <input id="newConversationInput" className="form-control" type="text" placeholder="New Conversation" name="conversation"/>
+        <button type="button" className="btn btn-warning" onClick={this.startNewConversation}>Create</button>
       </div>
     )
   } 
