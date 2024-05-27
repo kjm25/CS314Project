@@ -1,7 +1,8 @@
-const SERVER_EMIT_SELECT_CHAT = 'chat'
-const SERVER_RECEIVE_CHAT_LIST = 'chat_list'
-const SERVER_RECEIVE_MESSAGE = 'chat_message'
-const CLIENT_EMIT_MESSAGE = 'message'
+const SERVER_EMIT_SELECT_CHAT = 'chat';
+const SERVER_RECEIVE_CHAT_LIST = 'chat_list';
+const SERVER_RECEIVE_MESSAGE = 'chat_message';
+const CLIENT_EMIT_MESSAGE = 'message';
+const CLIENT_EMIT_DELETE_CHAT = 'delete_chat';
 
 class App extends React.Component
 {
@@ -252,18 +253,41 @@ function ConversationListItem ( {_id, Members, Last_Updated, Last_Message, reset
   };
 
   return (
-    <div className="text-light p-2 conversation-list-item border border-bottom" onClick={requestConversationFromID}>
-      <div className="d-flex justify-content-between">
-        <h5 className="text-truncate">
-          {/* Take the string of contacts, remove their email address (by splitting each contact by the delimiter '@' 
-          and selecting the first item.).  After doing that, join the array of names with a comma and a space. */}
-          { Members.map((contact) => (contact.split('@')[0])).join(', ') }
-        </h5>
-        <DateTime datetime={Last_Updated} /> 
+    <div>
+      <div className="text-light p-2 conversation-list-item border border-bottom" onClick={requestConversationFromID}>
+        <div className="d-flex justify-content-between">
+          <h5 className="text-truncate">
+            {/* Take the string of contacts, remove their email address (by splitting each contact by the delimiter '@' 
+            and selecting the first item.).  After doing that, join the array of names with a comma and a space. */}
+            { Members.map((contact) => (contact.split('@')[0])).join(', ') }
+          </h5>
+          <DateTime datetime={Last_Updated} /> 
+          
+        </div>
+        <PreviewText className="preview-text" preview_text={Last_Message} />
       </div>
-      <PreviewText className="preview-text" preview_text={Last_Message} />
+      <DeleteButton _id={_id}/>
     </div>
+    
   )
+}
+
+function DeleteButton({ _id }) 
+{
+  const deleteConversation = () => 
+  {
+    console.log(_id, "trying to delete id");
+    if (window.confirm('Are you sure you want to delete this conversation?')) {
+      console.log(`CLIENT_EMIT_DELETE_CHAT : <${_id}>`);
+      window.globalsocket.emit(CLIENT_EMIT_DELETE_CHAT, _id);
+    }
+  }
+
+  return (
+    <button className="btn btn-danger btn-sm conversation-delete-button" onClick={deleteConversation}>
+      Delete
+    </button>
+  );
 }
 
 class ConversationsContainer extends React.Component

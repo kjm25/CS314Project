@@ -279,13 +279,12 @@ async function db_delete_chat(chat_id)
 
     for (const member of members["Members"])//delete out of member's conversation list
     {
-      console.log("is a member", member);
       userCollection.updateMany({"User_ID": member}, { $pull: { "Conversations": new ObjectId(chat_id) } })
     }
 
-    messageCollection.deleteMany({"Chat_ID": chat_id});//delete messages 
-
     chatCollection.deleteOne({"_id": new ObjectId(chat_id)}); //delete chat
+    messageCollection.deleteMany({"Chat_ID": chat_id});//delete messages 
+    
 
   } catch (error) {
     console.error('An error occurred while connecting to MongoDB', error);
