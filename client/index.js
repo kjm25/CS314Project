@@ -3,113 +3,6 @@ const SERVER_RECEIVE_CHAT_LIST = 'chat_list'
 const SERVER_RECEIVE_MESSAGE = 'chat_message'
 const CLIENT_EMIT_MESSAGE = 'message'
 
-
-const FAKE_CONVERSATION_DATA = [
-  {
-    _id: 15647184,
-    // unread_messages: true,
-    Members: ["will@chaterize.com", "kevin@chaterize.com"],
-    Last_Updated: "2024-05-23T00:00-03:00",
-    Preview_Text: "An example of the combined"
-  },
-  {
-    _id: 26371852,
-    unread_messages: false,
-    Members: ["will@chaterize.com", "sara@chaterize.com", "clare@chaterize.com"],
-    Last_Updated: "2024-01-01T00:00-03:00",
-    preview_text: "If the time value includes seconds, it may optionally also include up to 7 decimal digits of fractional seconds, following the pattern hh:mm:ss[.f{1,7}]. This pattern is supported by the Azure Storage APIs, tools, and client libraries. You must use a period rather than commas to delineate the fractional seconds value."
-  },
-  {
-    _id: 356478254,
-    unread_messages: false,
-    Members: ["kevin@chaterize.com", "kelly@chaterize.com", "Korbin@chaterize.com"],
-    Last_Updated: "2024-12-01T12:34-05:06",
-    preview_text: "An example of the combined"
-  },
-  {
-    _id: 4564728568,
-    unread_messages: true,
-    Members: ["will@chaterize.com", "will@chaterize.com"],
-    Last_Updated: "2024-01-01T00:00-03:00",
-    preview_text: "An example of the combined"
-  }
-];
-
-const FAKE_MESSAGE_DATA = [
-    {
-      "User_ID": "alice@example.com",
-      "Chat_ID": 15647184,
-      // "Message_ID": "msg001",
-      "Text": "Hey everyone, how's it going?",
-      "Time_Sent": "2024-01-25T09:15:00.123+02:00",
-      // "Reply_To": null
-    },
-    {
-      "User_ID": "bob@example.com",
-      "Chat_ID": 15647184,
-      "Message_ID": "msg002",
-      "Text": "All good here, Alice! How about you?",
-      "Time_Sent": "2024-01-25T09:16:45.456+02:00",
-      "Reply_To": "msg001"
-    },
-    {
-      "User_ID": "charlie@example.com",
-      "Chat_ID": 15647184,
-      "Message_ID": "msg003",
-      "Text": "Just started a new project at work. Excited!",
-      "Time_Sent": "2024-01-25T09:20:30.789+02:00",
-      "Reply_To": null
-    },
-    {
-      "User_ID": "dave@example.com",
-      "Chat_ID": 15647184,
-      "Message_ID": "msg004",
-      "Text": "That's awesome, Charlie! What's it about?",
-      "Time_Sent": "2024-01-25T09:22:15.012+02:00",
-      "Reply_To": "msg003"
-    },
-    {
-      "User_ID": "alice@example.com",
-      "Chat_ID": 15647184,
-      "Message_ID": "msg005",
-      "Text": "I'm good, Bob. Just busy with some errands.",
-      "Time_Sent": "2024-01-25T09:25:50.345+02:00",
-      "Reply_To": "msg002"
-    },
-    {
-      "User_ID": "eva@example.com",
-      "Chat_ID": 15647184,
-      "Message_ID": "msg006",
-      "Text": "Morning everyone! Any weekend plans?",
-      "Time_Sent": "2024-01-25T09:30:10.678+02:00",
-      "Reply_To": null
-    },
-    {
-      "User_ID": "bob@example.com",
-      "Chat_ID": 15647184,
-      "Message_ID": "msg007",
-      "Text": "Not sure yet, Eva. Maybe just relax and watch a movie.",
-      "Time_Sent": "2024-01-25T09:32:55.901+02:00",
-      "Reply_To": "msg006"
-    },
-    {
-      "User_ID": "charlie@example.com",
-      "Chat_ID": 15647184,
-      "Message_ID": "msg008",
-      "Text": "The project is about building a new web app for our clients.",
-      "Time_Sent": "2024-01-25T09:35:40.234+02:00",
-      "Reply_To": "msg004"
-    },
-    {
-      "User_ID": "dave@example.com",
-      "Chat_ID": 15647184,
-      "Message_ID": "msg009",
-      "Text": "Sounds interesting, Charlie. Keep us posted!",
-      "Time_Sent": "2024-01-25T09:37:25.567+02:00",
-      "Reply_To": "msg008"
-    },  
-]
-
 function SendMessageForm ()
 {
   const sendMessage = () => {
@@ -183,6 +76,7 @@ class ConversationWindow extends React.Component {
           <MessageBox {...message} key={message.Time_Sent} />
         ))}
         <SendMessageForm resetMessages={this.resetMessages} />
+        {<div ref={this.messagesEndRef} />}
       </main>
     );
   }
@@ -280,11 +174,12 @@ function PreviewText ({ unread_messages, preview_text})
 }
 
 
-function ConversationListItem ( {_id, unread_messages = false, Members, Last_Updated, Last_Message})
+function ConversationListItem ( {_id, unread_messages = false, Members, Last_Updated, Last_Message, resetMessages})
 {
   const requestConversationFromID = () => {
     console.log(`SERVER_EMIT_SELECT_CHAT : <${_id}>`);
     window.globalsocket.emit(SERVER_EMIT_SELECT_CHAT, _id);
+    resetMessages();
   };
 
   console.log(Members)
@@ -324,6 +219,7 @@ class ConversationsContainer extends React.Component
     this.state = {
       conversations : []
     }
+    this.resetMessages = props.resetMessages
   }
 
   componentDidMount ()
@@ -339,7 +235,7 @@ class ConversationsContainer extends React.Component
       <nav className="conversation-container vstack gap-3 w-25 bg-dark p-1">
         <NewConversationButton />
         {this.state.conversations.map((conversation) => (
-          <ConversationListItem key={conversation._id} {...conversation} />
+          <ConversationListItem key={conversation._id} {...conversation} resetMessages={this.resetMessages} />
         ))}
       </nav>
     )
@@ -365,7 +261,7 @@ class App extends React.Component
       <>
         <Username />
         <div className="d-flex">
-          <ConversationsContainer className="w-25"/>
+          <ConversationsContainer className="w-25" resetMessages={this.resetMessages}/>
           <ConversationWindow className="w-auto" messages={this.state.messages} />
         </div>
       </>
