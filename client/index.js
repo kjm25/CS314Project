@@ -19,6 +19,7 @@ class App extends React.Component
   {
     return (
       <>
+        <LogoutButton />
         <Username />
         <div className="d-flex">
           <ConversationsContainer className="w-25" resetMessages={this.resetMessages}/>
@@ -31,6 +32,21 @@ class App extends React.Component
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<App />);
+
+function LogoutButton()
+{
+  const logout = () => {
+    console.log("trying to logout");
+    document.cookie = "id_token" + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    location.reload();//reload page after sign-out
+  }
+
+  return (
+    <div className="logout-button ">
+      <button className="btn btn-danger" onClick={logout}>Sign out</button>
+    </div>
+  )
+}
 
 function SendMessageForm ()
 {

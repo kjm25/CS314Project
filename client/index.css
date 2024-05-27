@@ -44,3 +44,13 @@ h5
     bottom: 0;
     flex: 1;
 }
+
+.google-sign
+{
+    float: left; /* don't be alone at the top */
+}
+
+.logout-button
+{
+    height: 44px;
+}
