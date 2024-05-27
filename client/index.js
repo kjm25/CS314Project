@@ -146,6 +146,7 @@ class Username extends React.Component
       
       // Display welcome message to the username
       this.setState({ username: set_username });
+      window.username = set_username;
     });
   }
 
@@ -254,14 +255,26 @@ function ConversationListItem ( {_id, Members, Last_Updated, Last_Message, reset
     resetMessages();
   };
 
+  
+  let member_list = Members;
+  if(member_list.length > 1)//remove yourself from display list if there is another member
+  {
+    console.log("pre", member_list);
+    console.log(window.username);
+    member_list = member_list.filter(((ele) => ele != window.username ));
+    console.log("post", member_list);
+  }
+  //Take the string of contacts, remove their email address (by splitting each contact by the delimiter '@' 
+  //and selecting the first item.).  After doing that, join the array of names with a comma and a space.
+  member_list = member_list.map((contact) => (contact.split('@')[0])).join(', ')
+  
   return (
+    
     <div>
       <div className="text-light p-2 conversation-list-item border border-bottom" onClick={requestConversationFromID}>
         <div className="d-flex justify-content-between">
           <h5 className="text-truncate">
-            {/* Take the string of contacts, remove their email address (by splitting each contact by the delimiter '@' 
-            and selecting the first item.).  After doing that, join the array of names with a comma and a space. */}
-            { Members.map((contact) => (contact.split('@')[0])).join(', ') }
+            { member_list }
           </h5>
           <DateTime datetime={Last_Updated} /> 
           
