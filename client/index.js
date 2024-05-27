@@ -24,7 +24,7 @@ class App extends React.Component
         <Username />
         <div className="d-flex">
           <ConversationsContainer className="w-25" resetMessages={this.resetMessages}/>
-          <ConversationWindow className="w-auto" messages={this.state.messages} />
+          <ConversationWindow className="w-auto bg-info" messages={this.state.messages} />
         </div>
       </>
     );
@@ -194,6 +194,7 @@ class NewConversationButton extends React.Component
   
     array_of_contacts.unshift(this.name); //add user's name to the list
     array_of_contacts = [...new Set(array_of_contacts)]; //remove any duplicates
+    array_of_contacts = array_of_contacts.map(ele => ele.toLowerCase());
     console.log("new_chat :", array_of_contacts);
     window.globalsocket.emit('new_chat', array_of_contacts);
     
@@ -249,6 +250,7 @@ function ConversationListItem ( {_id, Members, Last_Updated, Last_Message, reset
   const requestConversationFromID = () => {
     console.log(`SERVER_EMIT_SELECT_CHAT : <${_id}>`);
     window.globalsocket.emit(SERVER_EMIT_SELECT_CHAT, _id);
+    window.activeChat = _id; //make global id so elements know if they are active
     resetMessages();
   };
 
@@ -263,28 +265,36 @@ function ConversationListItem ( {_id, Members, Last_Updated, Last_Message, reset
           </h5>
           <DateTime datetime={Last_Updated} /> 
           
+        </div >
+        <div className="d-flex justify-content-between align-items-center">
+          <PreviewText className="preview-text" preview_text={Last_Message} />
+          <DeleteButton _id={_id} resetMessages={resetMessages}/>
         </div>
-        <PreviewText className="preview-text" preview_text={Last_Message} />
       </div>
-      <DeleteButton _id={_id}/>
+      
     </div>
     
   )
 }
 
-function DeleteButton({ _id }) 
+function DeleteButton({ _id, resetMessages}) 
 {
-  const deleteConversation = () => 
+  const deleteConversation = (event) => 
   {
+    event.stopPropagation();
     console.log(_id, "trying to delete id");
     if (window.confirm('Are you sure you want to delete this conversation?')) {
       console.log(`CLIENT_EMIT_DELETE_CHAT : <${_id}>`);
       window.globalsocket.emit(CLIENT_EMIT_DELETE_CHAT, _id);
+      if(window.activeChat === _id)
+      {
+        resetMessages();
+      }
     }
   }
 
   return (
-    <button className="btn btn-danger btn-sm conversation-delete-button" onClick={deleteConversation}>
+    <button className="btn btn-danger btn-sm" onClick={deleteConversation}>
       Delete
     </button>
   );
@@ -317,6 +327,7 @@ class ConversationsContainer extends React.Component
       let _id = this.state.conversations[0]['_id'];
       console.log(`SERVER_EMIT_SELECT_CHAT : <${_id}>`);
       window.globalsocket.emit(SERVER_EMIT_SELECT_CHAT, _id);
+      window.activeChat = _id;
     }
     return (
       <nav className="conversation-container vstack gap-3 w-25 bg-dark p-1">

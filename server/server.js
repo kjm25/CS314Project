@@ -77,7 +77,7 @@ io.on('connection', (socket) =>
     newest_time = new Date(0);
     
     function ID_Present(element) {
-      return chat_id == element["_id"];
+      return chat_id == element["_id"] && element["_id"] != null;
     }
     if(conversations.some(ID_Present))
     {
