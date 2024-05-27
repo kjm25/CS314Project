@@ -16,32 +16,13 @@
   </head>
   <body>
 
-    <div id="g_id_onload"
-      data-client_id="278406872967-ds0j19p8s6gouvvklrma8cmpjicpmnfu.apps.googleusercontent.com"
-      data-context="signin"
-      data-ux_mode="popup"
-      data-auto_prompt="true"
-      data-auto_select="true"
-      data-callback="handleCredentialResponse"
-      data-skip_prompt_cookie="id_token">
-    </div>
-    <!-- Can use use_fedcm_for_prompt="true" to not use 3rd party cookies, but only works on chrome-->
-
-    <div class="g_id_signin google-sign"
-      data-type="standard"
-      data-shape="rectangular"
-      data-theme="outline"
-      data-text="signin_with"
-      data-size="large"
-      data-auto_select="true"
-      data-logo_alignment="left">
-    </div>
+    <div class="google-sign" id="googleButton"></div>
 
     <div id="root"></div>
     <script src="index.js" type="text/babel"></script>
 
     <script>
-      function decodeJwtResponse (token) 
+      window.decodeJwtResponse = function (token) 
       {//from https://stackoverflow.com/questions/68927855/sign-in-with-google-console-log //gives decode without library
           var base64Url = token.split('.')[1];
           var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -66,14 +47,34 @@
       {
         // decodeJwtResponse() is a custom function defined by you
         // to decode the credential response.
-        const responsePayload = decodeJwtResponse(response.credential)
+        const responsePayload = window.decodeJwtResponse(response.credential)
         const email = responsePayload['email']; 
+        console.log(responsePayload);
         console.log(email, "just tried to signed in.");
         globalsocket.emit('google_sign', response);
         
         //try to save token with expirary date
         save_cookie(response, responsePayload['exp']);
       }
+
+      window.onload = function () {
+        google.accounts.id.initialize({
+          client_id: '278406872967-ds0j19p8s6gouvvklrma8cmpjicpmnfu.apps.googleusercontent.com',
+          callback: handleCredentialResponse,
+          auto_select: false, //make true for better sign in after cookie lapse but breaks signout
+
+        });
+
+        window.google_sign = google.accounts.id; //global if react needs to access
+        if(document.cookie.indexOf('id_token=') == -1)
+        {
+          google.accounts.id.prompt();
+        }
+        
+        google.accounts.id.renderButton(document.getElementById("googleButton"),
+          { theme: "outline", size: "large" }  // customization attributes
+        );
+      };
     </script>
 
   </body>

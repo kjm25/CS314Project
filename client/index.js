@@ -37,13 +37,27 @@ function LogoutButton()
 {
   const logout = () => {
     console.log("trying to logout");
+    
+    /*let sub = '0'
+    let cookie_array = document.cookie.split(';');
+    for(let i = 0; i < cookie_array.length; i++) {
+        let cookie_pairs = cookie_array[i].split("=");
+
+        if("id_token" == cookie_pairs[0].trim()) {
+            sub = window.decodeJwtResponse(cookie_pairs[1])['email'];
+            console.log(sub);
+        }
+    }
+    window.google_sign.revoke(sub, done => {
+      console.log(done.error); }); 
+    window.google_sign.disableAutoSelect(); */ //old code still wanted but doesn't work if not using fedCM
     document.cookie = "id_token" + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
     location.reload();//reload page after sign-out
   }
 
   return (
     <div className="logout-button ">
-      <button className="btn btn-danger" onClick={logout}>Sign out</button>
+      <button className="btn btn-danger" onClick={logout}>Sign Out</button>
     </div>
   )
 }
@@ -137,7 +151,7 @@ class Username extends React.Component
   constructor (props)
   {
     super (props);
-    this.state = {username : "Anonymous"};
+    this.state = {username : ""};
   }
 
   componentDidMount() {
