@@ -49,8 +49,7 @@
         // to decode the credential response.
         const responsePayload = window.decodeJwtResponse(response.credential)
         const email = responsePayload['email']; 
-        console.log(responsePayload);
-        console.log(email, "just tried to signed in.");
+        //console.log(email, "just tried to signed in.");
         globalsocket.emit('google_sign', response);
         
         //try to save token with expirary date

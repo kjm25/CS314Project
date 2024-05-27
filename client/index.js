@@ -38,19 +38,6 @@ function LogoutButton()
   const logout = () => {
     console.log("trying to logout");
     
-    /*let sub = '0'
-    let cookie_array = document.cookie.split(';');
-    for(let i = 0; i < cookie_array.length; i++) {
-        let cookie_pairs = cookie_array[i].split("=");
-
-        if("id_token" == cookie_pairs[0].trim()) {
-            sub = window.decodeJwtResponse(cookie_pairs[1])['email'];
-            console.log(sub);
-        }
-    }
-    window.google_sign.revoke(sub, done => {
-      console.log(done.error); }); 
-    window.google_sign.disableAutoSelect(); */ //old code still wanted but doesn't work if not using fedCM
     document.cookie = "id_token" + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
     location.reload();//reload page after sign-out
   }
@@ -98,7 +85,6 @@ function MessageBox ( {User_ID, Time_Sent, Text} )
     </div>
   )
 }
-
 
 class ConversationWindow extends React.Component {
   constructor(props) {
@@ -151,7 +137,7 @@ class Username extends React.Component
   constructor (props)
   {
     super (props);
-    this.state = {username : "Please Login"};
+    this.state = {username : "Please Sign In"};
   }
 
   componentDidMount() {
@@ -251,17 +237,13 @@ function DateTime ( {datetime})
 }
 
 
-function PreviewText ({ unread_messages, preview_text})
+function PreviewText ({ preview_text})
 {
-  if (unread_messages)
-  {
-    return <p><strong>{preview_text}</strong></p>
-  }
-  return <p>{preview_text}</p>
+  return <p> {preview_text}</p>
 }
 
 
-function ConversationListItem ( {_id, unread_messages = false, Members, Last_Updated, Last_Message, resetMessages})
+function ConversationListItem ( {_id, Members, Last_Updated, Last_Message, resetMessages})
 {
   const requestConversationFromID = () => {
     console.log(`SERVER_EMIT_SELECT_CHAT : <${_id}>`);
@@ -279,22 +261,10 @@ function ConversationListItem ( {_id, unread_messages = false, Members, Last_Upd
         </h5>
         <DateTime datetime={Last_Updated} /> 
       </div>
-      <PreviewText unread_messages={unread_messages} preview_text={Last_Message} />
+      <PreviewText className="preview-text" preview_text={Last_Message} />
     </div>
   )
 }
-
-// function ConversationsContainer ({conversations})
-// {
-//   return (
-//     <nav className="conversation-container vstack gap-3 w-25 bg-dark p-1">
-//       <NewConversationButton />
-//       {conversations.map((conversation) => (
-//         <ConversationListItem key={conversation._id} {...conversation} />
-//       ))}
-//     </nav>
-//   )
-// }
 
 class ConversationsContainer extends React.Component
 {
@@ -305,6 +275,7 @@ class ConversationsContainer extends React.Component
       conversations : []
     }
     this.resetMessages = props.resetMessages
+    this.setDefaultConv = false;
   }
 
   componentDidMount ()
@@ -316,6 +287,13 @@ class ConversationsContainer extends React.Component
 
   render ()
   {
+    if(!this.setDefaultConv && this.state.conversations.length > 0)
+    {
+      this.setDefaultConv = true;
+      let _id = this.state.conversations[0]['_id'];
+      console.log(`SERVER_EMIT_SELECT_CHAT : <${_id}>`);
+      window.globalsocket.emit(SERVER_EMIT_SELECT_CHAT, _id);
+    }
     return (
       <nav className="conversation-container vstack gap-3 w-25 bg-dark p-1">
         <NewConversationButton />
