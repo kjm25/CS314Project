@@ -264,11 +264,19 @@ function ConversationListItem ( {_id, Members, Last_Updated, Last_Message, reset
   //Take the string of contacts, remove their email address (by splitting each contact by the delimiter '@' 
   //and selecting the first item.).  After doing that, join the array of names with a comma and a space.
   member_list = member_list.map((contact) => (contact.split('@')[0])).join(', ')
-  
+  let conditionalClassName = "";
+  if(window.activeChat == _id)
+  {
+    conditionalClassName = "text-light p-2 conversation-list-item border border-bottom bg-secondary";
+  }
+  else
+  {
+    conditionalClassName = "text-light p-2 conversation-list-item border border-bottom bg-dark";
+  }
+
   return (
-    
     <div>
-      <div className="text-light p-2 conversation-list-item border border-bottom" onClick={requestConversationFromID}>
+      <div className={conditionalClassName} onClick={requestConversationFromID}>
         <div className="d-flex justify-content-between">
           <h5 className="text-truncate">
             { member_list }
