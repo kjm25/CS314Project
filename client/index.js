@@ -259,10 +259,7 @@ function ConversationListItem ( {_id, Members, Last_Updated, Last_Message, reset
   let member_list = Members;
   if(member_list.length > 1)//remove yourself from display list if there is another member
   {
-    console.log("pre", member_list);
-    console.log(window.username);
     member_list = member_list.filter(((ele) => ele != window.username ));
-    console.log("post", member_list);
   }
   //Take the string of contacts, remove their email address (by splitting each contact by the delimiter '@' 
   //and selecting the first item.).  After doing that, join the array of names with a comma and a space.
