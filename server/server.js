@@ -1,7 +1,9 @@
 //Seperate server code needed as MongoDB / require cannot be run from client code
 const express = require('express');
+var favicon = require('serve-favicon'); 
 const app = express();
 app.use(express.static(__dirname + './../client' ));
+app.use(favicon(__dirname + '/favicon.ico'));
 app.use(express.json());
 
 
