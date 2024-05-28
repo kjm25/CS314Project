@@ -126,7 +126,7 @@ io.on('connection', (socket) =>
     console.log(message); 
   
     //call MongoDB
-    if(server_chat_id != "" && server_username != "")
+    if(server_chat_id != "" && server_username != "" && server_chat_id != null) 
     {
       db_send(message, server_username, server_chat_id);
     }
