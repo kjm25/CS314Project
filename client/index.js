@@ -33,6 +33,7 @@ class App extends React.Component
     if (this.state.signedIn) {
       return (
         <>
+          <LoginPopup signedInStatus={this.state.signedIn}/>
           <TopNav />
           <div className="page-content">
             <ConversationsContainer className="w-25" resetMessages={this.resetMessages}/>
@@ -79,6 +80,55 @@ function LogoutButton()
       <button className="btn btn-danger" onClick={logout}>Sign Out</button>
     </div>
   )
+}
+
+class LoginPopup extends React.Component
+{
+  constructor(props) {
+    super(props);
+    this.state = { 
+      userLoggedIn: props.signedInStatus
+    }
+  }
+
+  closePopUp ()
+  {
+    if (DEBUGGING)
+    {
+      console.log (`Closing the popup.\nLogin status: ${this.state.userLoggedIn}`) 
+    }
+    
+    const popup = document.getElementById('login-popup');
+    popup.style['visibility'] = 'hidden'
+  }
+
+  componentDidMount ()
+  {
+    if (this.state.userLoggedIn)
+      this.closePopUp()
+  }
+
+  render ()
+  {
+    return (
+      <div id="login-popup">
+        <aside>
+          <div className="header d-flex justify-content-between mb-2">
+            <h5>Sign in</h5>
+            <button type="button" className="btn-close" aria-label="Close" onClick={this.closePopUp}></button>
+          </div>
+          <div className="body">
+            To continue to use Chaterize, you must sign in using a Google Account.
+          </div>
+          <div className="footer d-flex justify-content-end fixed-bottom m-3 gap-3">
+            <button type="button" className="btn btn-primary">Google Sign-In</button>
+            <button type="button" className="btn btn-outline-danger" onClick={this.closePopUp}>Close</button>
+            {/* <div class="google-sign" id="googleButton"></div> */}
+          </div>
+        </aside>   
+      </div>
+    )
+  }
 }
 
 function SendMessageForm ()
