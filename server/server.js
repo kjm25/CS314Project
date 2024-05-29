@@ -128,7 +128,7 @@ io.on('connection', (socket) =>
     //call MongoDB
     if(server_chat_id != "" && server_username != "" && server_chat_id != null) 
     {
-      db_send(message, server_username, server_chat_id);
+      db_send_message(message, server_username, server_chat_id);
     }
   });
 
@@ -192,7 +192,7 @@ const client = new MongoClient(uri, {
   }
 });
 
-async function db_send(message, username, chat_id) {
+async function db_send_message(message, username, chat_id) {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
