@@ -29,6 +29,20 @@ span.date-time
     display: flex;
 }
 
+.welcome-page
+{
+    height: 100vh;
+    width: 100vw;
+    align-items: center;
+}
+
+.welcome-text
+{
+    position: relative;
+    top: 30%;
+    transform: translateY(-30%);
+}
+
 .conversation-window
 {
     height: 100%;
