@@ -10,12 +10,10 @@ class App extends React.Component
     super(props);
     this.state = { messages: [] };
     this.resetMessages = this.resetMessages.bind(this);
-    if (document.cookie.indexOf('id_token=') !== -1) {
-      this.state = {signedIn: true};
-    }
-    else {
-      this.state = {signedIn: false};
-    }
+
+    // Check if a token has been assigned.  If the indexof('id_token') returns 
+    // true, then the user is signed in.
+    this.state = {signedIn: (document.cookie.indexOf('id_token') !== -1)}
   }
 
   componentDidMount() {
