@@ -76,7 +76,7 @@ span.date-time
 
 .google-container
 {
-    display: flex;
+    /* display: flex; */
     align-items: center;
     float: left; /* Align with other nav items */
     height: calc(var(--navbar-height) - 11px);

@@ -185,7 +185,7 @@ class ConversationWindow extends React.Component {
     this.messagesEndRef = React.createRef();
     this.conversation_id = null
     // Use set so that it becomes impossible to add duplicates.
-    this.contacts = new Set()
+    this.contacts = new Set(window.member_list)
   }
 
   componentDidMount()
@@ -226,7 +226,7 @@ class ConversationWindow extends React.Component {
       <main className="conversation-window">
         <div className="px-2 text-end">
           {/* Convert from a set to an array and join the elements */}
-          {Array.from(this.contacts).join(', ')}
+          {window.member_list}
         </div>
         <div className="messages-container">
           {this.state.messages.map( (message) => (
@@ -377,6 +377,20 @@ function ConversationListItem ( {_id, Members, Last_Updated, Last_Message, reset
     return email.split('@')[0]
   }
 
+  // If the conversation list item matches, then apply an "active" 
+  // state to the classnames.  Also update the global member_list 
+  // to include the members of the active conversation
+  let conditionalClassName = "text-light p-2 conversation-list-item border border-bottom"
+  if (window.activeChat == _id)
+  {
+    conditionalClassName += " bg-secondary";
+    window.member_list = member_list;
+  } 
+  else
+  {
+    conditionalClassName += " bg-dark";
+  }
+
   // Remove yourself from display list if there is another member
   let member_list = Members;
   if(member_list.length > 1)
@@ -387,8 +401,6 @@ function ConversationListItem ( {_id, Members, Last_Updated, Last_Message, reset
   // Take the string of contacts, remove their email address (by splitting each contact by the delimiter '@' 
   // and selecting the first item.).  After doing that, join the array of names with a comma and a space.
   member_list = member_list.map((contact) => stripEmail(contact)).join(', ')
-
-  const conditionalClassName = `text-light p-2 conversation-list-item border border-bottom ${(window.activeChat == _id) ? "bg-secondary" : "bg-dark"}`;
 
   return (
     <div>
