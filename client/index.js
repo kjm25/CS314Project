@@ -33,7 +33,7 @@ class App extends React.Component
     if (this.state.signedIn) {
       return (
         <>
-          <LoginPopup signedInStatus={this.state.signedIn}/>
+          {/* <LoginPopup signedInStatus={this.state.signedIn}/> */}
           <TopNav />
           <div className="page-content">
             <ConversationsContainer className="w-25" resetMessages={this.resetMessages}/>
