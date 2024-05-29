@@ -6,6 +6,8 @@ const CLIENT_EMIT_DELETE_CHAT = 'delete_chat';
 
 const DEBUGGING = true;
 
+const greetingMessages = ["Hello", "Hi", "Sup"]
+
 class App extends React.Component
 {
   constructor(props) {
@@ -546,10 +548,25 @@ class SignIn extends React.Component
   }
 }
 
-
-function TopNav()
+class TopNav extends React.Component
 {
-  const logout = () => {
+  constructor (props)
+  {
+    super(props);
+    this.state = {
+      username: "Chaterize",
+    }
+  }
+
+  componentDidMount ()
+  {
+    window.globalsocket.on ('verified', (set_username) => {
+      this.setState({username: "Signed in as: " + set_username})
+    })
+  }
+
+  logout ()
+  {
     if (DEBUGGING)
     {
       console.log("trying to logout");
@@ -561,22 +578,27 @@ function TopNav()
     location.reload(); 
   };
 
-  const handleSignInClick = () => {
+  handleSignInClick ()
+  {
     google.accounts.id.prompt();
   };
 
-  return (
-    <nav className="navbar bg-dark" aria-current="true">
-      <div className="container-fluid">
-        <a className="navbar-brand text-light">{"Chaterize"}</a>
-        <div className="nav-item dropdown text-light">
-          {/* <SignIn onClick={handleSignInClick} /> */}
-          <div className="google-sign" id="googleButton"></div>
-          <button type="button" className="btn btn-danger mx-2" onClick={logout}>
-            Logout
-          </button>
+  render ()
+  {
+    return (
+      <nav className="navbar bg-dark" aria-current="true">
+        <div className="container-fluid">
+          {/* <a className="navbar-brand text-light">{ greetingMessages[Math.floor(Math.random() * (greetingMessages.length - 1))] + " " + this.state.username}</a> */}
+          <a className="navbar-brand text-light">{this.state.username}</a>
+          <div className="nav-item dropdown text-light">
+            {/* <SignIn onClick={handleSignInClick} /> */}
+            <div className="google-sign" id="googleButton"></div>
+            <button type="button" className="btn btn-danger mx-2" onClick={this.logout}>
+              Logout
+            </button>
+          </div>
         </div>
-      </div>
-    </nav>
-  );
+      </nav>
+    );
+  }
 }
