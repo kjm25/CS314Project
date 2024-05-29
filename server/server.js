@@ -350,3 +350,15 @@ async function db_get_messages(chat_id, newest_time) {
     return result;
   }
 }
+
+function sum(a, b)
+{
+  return a + b;
+}
+
+function mult(a, b)
+{
+  return a * b;
+}
+
+module.exports = {sum, mult};
