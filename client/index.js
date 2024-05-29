@@ -228,7 +228,8 @@ function DateTime ( {datetime})
   
   if (hoursDiff > 16)
   {
-    formatter = new Intl.DateTimeFormat('en-US', {  month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' });
+    // formatter = new Intl.DateTimeFormat('en-US', {  month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' });
+    formatter = new Intl.DateTimeFormat('en-US', {  month: 'short', day: 'numeric'});
   }
   else
   {
@@ -236,7 +237,7 @@ function DateTime ( {datetime})
   }
 
   const formattedDate = formatter.format(date);
-  return <span>{formattedDate}</span>
+  return <span className="date-time">{formattedDate}</span>
 }
 
 
@@ -255,15 +256,20 @@ function ConversationListItem ( {_id, Members, Last_Updated, Last_Message, reset
     resetMessages();
   };
 
+  function stripEmail ( email )
+  {
+    return email.split('@')[0]
+  }
+
   
   let member_list = Members;
   if(member_list.length > 1)//remove yourself from display list if there is another member
   {
     member_list = member_list.filter(((ele) => ele != window.username ));
   }
-  //Take the string of contacts, remove their email address (by splitting each contact by the delimiter '@' 
-  //and selecting the first item.).  After doing that, join the array of names with a comma and a space.
-  member_list = member_list.map((contact) => (contact.split('@')[0])).join(', ')
+  // Take the string of contacts, remove their email address (by splitting each contact by the delimiter '@' 
+  // and selecting the first item.).  After doing that, join the array of names with a comma and a space.
+  member_list = member_list.map((contact) => stripEmail(contact)).join(', ')
   let conditionalClassName = "";
   if(window.activeChat == _id)
   {
@@ -278,7 +284,7 @@ function ConversationListItem ( {_id, Members, Last_Updated, Last_Message, reset
     <div>
       <div className={conditionalClassName} onClick={requestConversationFromID}>
         <div className="d-flex justify-content-between">
-          <h5 className="text-truncate">
+          <h5 className="conversation-contacts-list text-truncate">
             { member_list }
           </h5>
           <DateTime datetime={Last_Updated} /> 
@@ -312,9 +318,9 @@ function DeleteButton({ _id, resetMessages})
   }
 
   return (
-    <button className="btn btn-danger btn-sm" onClick={deleteConversation}>
-      Delete
-    </button>
+    <div data-bs-theme="dark">
+      <button className="btn-close" onClick={deleteConversation} aria-label="Close"></button>
+    </div>
   );
 }
 

@@ -11,7 +11,12 @@ body
 h5
 {
     margin: 0;
-    /*text-transform: capitalize; email adresses look better without capitals and helps testing*/
+}
+
+span.date-time
+{
+    min-width:60px;
+    text-align: end;
 }
 
 .page-content

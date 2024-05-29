@@ -10,3 +10,19 @@
 
 
 // Server
+
+
+
+
+
+// TODO
+// Fix all naming conventions for communication with the server.
+// Fix Time Component
+// Delete Chat Functionality
+// Handle missing values for all messages, handle all missing values for conversations.
+// Better input validation on client end
+// By Default select first conversation.
+// console.log server.emits() aka use on() for all components 
+// New Conversation Form improvements
+// Hard test messages and new conversations to the server/database
+// Nasty emmissions
