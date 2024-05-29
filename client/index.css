@@ -25,7 +25,7 @@ span.date-time
     position: fixed;
     top: calc( 0 + var(--navbar-height));
     left: 0;
-    height: calc( 100vh - var(--navbar-height) );
+    height: calc( 100vh - var(--navbar-height) + 11px );
     width: 100vw;
     display: flex;
 }
