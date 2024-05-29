@@ -43,6 +43,7 @@ span.date-time
 {
     overflow-y: auto;
     max-width: var(--sidenav-width);
+    min-width: var(--sidenav-width);
 }
 
 .conversation-list-item
@@ -70,6 +71,14 @@ span.date-time
 {
     float: left; /* don't be alone at the top */
     padding: 0px 0px 0px;
+}
+
+.google-container
+{
+    display: flex;
+    align-items: center;
+    float: left; /* Align with other nav items */
+    height: calc(var(--navbar-height) - 11px);
 }
 
 .logout-button

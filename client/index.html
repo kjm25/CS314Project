@@ -21,7 +21,10 @@
   </head>
   <body class="no-scroll">
 
-    <div class="google-sign" id="googleButton"></div>
+
+    <div class="google-container bg-dark">
+      <div class="google-sign" id="googleButton"></div>
+    </div>
 
     <div id="root"></div>
     <script src="index.js" type="text/babel"></script>
@@ -68,24 +71,6 @@
         save_cookie(response, responsePayload['exp']);
       }
 
-      // window.onload = function () 
-      // {
-      //   google.accounts.id.initialize({
-      //     client_id: '278406872967-ds0j19p8s6gouvvklrma8cmpjicpmnfu.apps.googleusercontent.com',
-      //     callback: handleCredentialResponse,
-      //     auto_select: true, //make true for better sign in after cookie lapse but breaks signout
-      //   });
-
-      //   window.google_sign = google.accounts.id; //global if react needs to access
-      //   if(document.cookie.indexOf('id_token=') == -1)
-      //   {
-      //     google.accounts.id.prompt();
-      //   }
-        
-      //   google.accounts.id.renderButton(document.getElementById("googleButton"),
-      //     { theme: "outline", size: "large" }  // customization attributes
-      //   );
-      // };
       window.onload = function ()
       {
         console.log ("Window Onload")
@@ -100,7 +85,7 @@
         }
 
         google.accounts.id.renderButton(document.getElementById("googleButton"),
-          { theme: "outline", size: "large" }  // customization attributes
+          { theme: "outline", size: "large", width: 250 }  // customization attributes
         );
 
       };
