@@ -235,7 +235,7 @@ class ConversationWindow extends React.Component {
   {   
     return (
       <main className="conversation-window">
-        <div className="px-2 text-end">
+        <div className="px-2 text-end text-muted">
           {/* Convert from a set to an array and join the elements */}
           {window.member_list}
         </div>
