@@ -97,7 +97,7 @@ class LoginPopup extends React.Component
     {
       console.log (`Closing the popup.\nLogin status: ${this.state.userLoggedIn}`) 
     }
-    
+
     const popup = document.getElementById('login-popup');
     popup.style['visibility'] = 'hidden'
   }
@@ -184,7 +184,7 @@ class ConversationWindow extends React.Component {
   constructor(props) {
     super(props);
     this.state = { 
-      messages: []
+      messages: [],
     }
     this.messagesEndRef = React.createRef();
     this.conversation_id = null
@@ -369,6 +369,7 @@ function ConversationListItem ( {_id, Members, Last_Updated, Last_Message, reset
     if (DEBUGGING)
     {
       console.log(`SERVER_EMIT_SELECT_CHAT : <${_id}>`);
+      console.log(`ConversationListItem, Members of the current conversation: ${Members}`)
     }
     window.globalsocket.emit(SERVER_EMIT_SELECT_CHAT, _id);
     window.activeChat = _id; //make global id so elements know if they are active
@@ -380,24 +381,18 @@ function ConversationListItem ( {_id, Members, Last_Updated, Last_Message, reset
     return email.split('@')[0]
   }
 
-  
+  // Remove yourself from display list if there is another member
   let member_list = Members;
-  if(member_list.length > 1)//remove yourself from display list if there is another member
+  if(member_list.length > 1)
   {
     member_list = member_list.filter(((ele) => ele != window.username ));
   }
+
   // Take the string of contacts, remove their email address (by splitting each contact by the delimiter '@' 
   // and selecting the first item.).  After doing that, join the array of names with a comma and a space.
   member_list = member_list.map((contact) => stripEmail(contact)).join(', ')
-  let conditionalClassName = "";
-  if(window.activeChat == _id)
-  {
-    conditionalClassName = "text-light p-2 conversation-list-item border border-bottom bg-secondary";
-  }
-  else
-  {
-    conditionalClassName = "text-light p-2 conversation-list-item border border-bottom bg-dark";
-  }
+
+  const conditionalClassName = `text-light p-2 conversation-list-item border border-bottom ${(window.activeChat == _id) ? "bg-secondary" : "bg-dark"}`;
 
   return (
     <div>
@@ -425,6 +420,7 @@ function DeleteButton({ _id, resetMessages})
   const deleteConversation = (event) => 
   {
     event.stopPropagation();
+
     if (DEBUGGING)
     {
       console.log(_id, "trying to delete id");
@@ -438,6 +434,7 @@ function DeleteButton({ _id, resetMessages})
       }
 
       window.globalsocket.emit(CLIENT_EMIT_DELETE_CHAT, _id);
+
       if(window.activeChat === _id)
       {
         resetMessages();
@@ -481,6 +478,7 @@ class ConversationsContainer extends React.Component
       if (DEBUGGING)
       {
         console.log(`SERVER_EMIT_SELECT_CHAT : <${_id}>`);
+        console.log(`Current Members: ${this.state.conversations[0].Members}`)
       }
 
       window.globalsocket.emit(SERVER_EMIT_SELECT_CHAT, _id);
