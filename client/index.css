@@ -32,16 +32,20 @@ span.date-time
 
 .welcome-page
 {
+    position: relative;
     height: 100vh;
     width: 100vw;
     align-items: center;
+    color: white;
 }
 
 .welcome-text
 {
-    position: relative;
-    top: 30%;
-    transform: translateY(-30%);
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -40%);
+    text-align: center;
 }
 
 .conversation-window
