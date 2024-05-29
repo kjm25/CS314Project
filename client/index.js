@@ -10,6 +10,18 @@ class App extends React.Component
     super(props);
     this.state = { messages: [] };
     this.resetMessages = this.resetMessages.bind(this);
+    if (document.cookie.indexOf('id_token=') !== -1) {
+      this.state = {signedIn: true};
+    }
+    else {
+      this.state = {signedIn: false};
+    }
+  }
+
+  componentDidMount() {
+    window.globalsocket.on('verified', (set_username) => {
+      this.setState({ signedIn: true });
+    });
   }
 
   resetMessages() {
@@ -18,16 +30,29 @@ class App extends React.Component
 
   render()
   {
-    return (
-      <>
-        <TopNav />
-        <div className="page-content">
-          <ConversationsContainer className="w-25" resetMessages={this.resetMessages}/>
-          <ConversationWindow className="w-auto bg-info" messages={this.state.messages} />
-        </div>
-        
-      </>
-    );
+    if (this.state.signedIn) {
+      return (
+        <>
+          <TopNav />
+          <div className="page-content">
+            <ConversationsContainer className="w-25" resetMessages={this.resetMessages}/>
+            <ConversationWindow className="w-auto bg-info" messages={this.state.messages} />
+          </div>
+          
+        </>
+      );
+    }
+    else
+    {
+      return (
+        <>
+          <TopNav />
+          <div>
+            <h1>Sign-In with Google</h1>
+          </div>
+        </>
+      )
+    }
   }
 }
 
