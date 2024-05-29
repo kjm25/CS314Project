@@ -41,6 +41,7 @@ span.date-time
 
 .conversation-container
 {
+    overflow-y: auto;
     max-width: var(--sidenav-width);
 }
 
