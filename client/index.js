@@ -62,8 +62,11 @@ function LogoutButton()
   const logout = () => {
     console.log("trying to logout");
     
-    document.cookie = "id_token" + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-    location.reload();//reload page after sign-out
+    // Clear the id_token.
+    document.cookie = "id_tokenx=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    
+    // Reload page after sign-out.
+    location.reload();
   }
 
   return (
