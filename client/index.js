@@ -20,12 +20,12 @@ class App extends React.Component
   {
     return (
       <>
-        <LogoutButton />
-        <Username />
-        <div className="d-flex">
+        <TopNav />
+        <div className="page-content">
           <ConversationsContainer className="w-25" resetMessages={this.resetMessages}/>
           <ConversationWindow className="w-auto bg-info" messages={this.state.messages} />
         </div>
+        
       </>
     );
   }
@@ -78,7 +78,7 @@ function MessageBox ( {User_ID, Time_Sent, Text} )
     <div className="message-box card w-50 mb-1 border border-0">
       <div className="card-body pb-0">
         <div className="d-flex justify-content-between">
-          <h5 className="">{User_ID}</h5>
+          <h5 className="m-0">{User_ID}</h5>
           <DateTime datetime={Time_Sent} />
         </div>
         <p className="text-bg-warning p-3 rounded">{Text}</p>
@@ -348,7 +348,7 @@ class ConversationsContainer extends React.Component
       window.activeChat = _id;
     }
     return (
-      <nav className="conversation-container vstack gap-3 w-25 bg-dark p-1">
+      <nav className="conversation-container vstack gap-3 bg-dark p-1">
         <NewConversationButton />
         {this.state.conversations.map((conversation) => (
           <ConversationListItem key={conversation._id} {...conversation} resetMessages={this.resetMessages} />
@@ -357,4 +357,64 @@ class ConversationsContainer extends React.Component
     )
   }
 
+}
+
+class SignIn extends React.Component
+{
+  constructor(props)
+  {
+    super(props);
+    this.state = {
+      isLoggedIn: false,
+      username: "Google Sign-In"
+    }
+    this.toggleSignIn = this.toggleSignIn.bind(this)
+  }
+
+  toggleSignIn()
+  {
+    window.globalsocket.on('verified', (set_username) => {
+      this.setState({ username: set_username });
+      window.username = set_username;
+    });
+    this.props.onClick(); // Call the onClick function passed from parent (TopNav)
+  }
+
+  render() {
+    return (
+      <button type="button" className="btn btn-outline-primary mx-2" onClick={this.toggleSignIn}>
+        {this.state.username}
+      </button>
+    );
+  }
+}
+
+
+function TopNav()
+{
+  const logout = () => {
+    console.log("trying to logout");
+    document.cookie = "id_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    location.reload(); //reload page after sign-out
+  };
+
+  const handleSignInClick = () => {
+    console.log("Here");
+    google.accounts.id.prompt();
+  };
+
+  return (
+    <nav className="navbar bg-dark" aria-current="true">
+      <div className="container-fluid">
+        <a className="navbar-brand text-light">Chaterize</a>
+        <div className="nav-item dropdown text-light">
+          {/* <SignIn onClick={handleSignInClick} /> */}
+          <div class="google-sign" id="googleButton"></div>
+          <button type="button" className="btn btn-danger mx-2" onClick={logout}>
+            Logout
+          </button>
+        </div>
+      </div>
+    </nav>
+  );
 }

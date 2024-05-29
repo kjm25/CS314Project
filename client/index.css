@@ -1,14 +1,29 @@
+:root {
+    --navbar-height: 67px;
+    --sidenav-width: 250px;
+}
+
+body
+{
+    overflow: hidden;
+}
+
 h5
 {
+    margin: 0;
     /*text-transform: capitalize; email adresses look better without capitals and helps testing*/
+}
+
+.page-content
+{
+    height: calc( 100vh - var(--navbar-height) );
+    display: flex;
 }
 
 .conversation-window
 {
-    width: 70%;
-    height: calc(100vh - 46px); 
-    /*should be - 44px which is height of the top elements, but 2 extra pixels come from somewhere*/
-    padding: 0px 0px 0px;
+    height: 100%;
+    width: 100%;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -21,9 +36,7 @@ h5
 
 .conversation-container
 {
-    height: calc(100vh - 46px);
-    padding: 0px 0px 0px;
-    overflow-y: auto;
+    max-width: var(--sidenav-width);
 }
 
 .conversation-list-item
@@ -41,12 +54,10 @@ h5
     overflow: hidden;
 }
 
-
 .messages-container
 {
-    position: sticky;
-    bottom: 0;
-    flex: 1;
+    border: 1px solid red;
+    height: 100%;
 }
 
 .google-sign
