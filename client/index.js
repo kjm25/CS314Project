@@ -4,7 +4,7 @@ const SERVER_RECEIVE_MESSAGE = 'chat_message';
 const CLIENT_EMIT_MESSAGE = 'message';
 const CLIENT_EMIT_DELETE_CHAT = 'delete_chat';
 
-const DEBUGGING = true;
+const DEBUGGING = false;
 
 const greetingMessages = ["Hello", "Hi", "Sup"]
 
@@ -398,7 +398,6 @@ function ConversationListItem ( {_id, Members, Last_Updated, Last_Message, reset
   {
     conditionalClassName += " bg-secondary";
     window.member_list = Members.join(", ");
-    console.log(window.member_list);
   } 
   else
   {

@@ -26,3 +26,15 @@
 // New Conversation Form improvements
 // Hard test messages and new conversations to the server/database
 // Nasty emmissions
+
+
+
+
+
+## Testing
+
+# Front end
+
+Input validation
+1. Emails in New Conversation
+2. 
