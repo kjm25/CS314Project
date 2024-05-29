@@ -61,8 +61,8 @@ span.date-time
 
 .messages-container
 {
-    border: 1px solid red;
     height: 100%;
+    overflow-y: scroll;
 }
 
 .google-sign

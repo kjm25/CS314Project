@@ -64,7 +64,7 @@ function SendMessageForm ()
   }
 
   return (
-    <div className="input-group mb-3">
+    <div className="input-group">
       <input id="new-message-input" className="form-control" type="text" placeholder="Chaterize" />
       <button className="btn btn-warning" type="button" id="send-message-btn" onClick={sendMessage}>Send Message</button>
     </div>
