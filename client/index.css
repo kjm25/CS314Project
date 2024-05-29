@@ -26,6 +26,7 @@ span.date-time
     top: calc( 0 + var(--navbar-height));
     left: 0;
     height: calc( 100vh - var(--navbar-height) );
+    width: 100vw;
     display: flex;
 }
 
@@ -36,6 +37,12 @@ span.date-time
     overflow-y: auto;
     display: flex;
     flex-direction: column;
+}
+
+.messages-container
+{
+    height: 100%;
+    overflow-y: scroll;
 }
 
 .message-box
@@ -65,11 +72,6 @@ span.date-time
     overflow: hidden;
 }
 
-.messages-container
-{
-    height: 100%;
-    overflow-y: scroll;
-}
 
 .google-sign
 {
