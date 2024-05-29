@@ -4,6 +4,8 @@ const SERVER_RECEIVE_MESSAGE = 'chat_message';
 const CLIENT_EMIT_MESSAGE = 'message';
 const CLIENT_EMIT_DELETE_CHAT = 'delete_chat';
 
+const DEBUGGING = true;
+
 class App extends React.Component
 {
   constructor(props) {
@@ -60,7 +62,10 @@ root.render(<App />);
 function LogoutButton()
 {
   const logout = () => {
-    console.log("trying to logout");
+    if (DEBUGGING)
+    {
+      console.log("trying to logout");
+    }
     
     // Clear the id_token.
     document.cookie = "id_tokenx=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
@@ -78,12 +83,23 @@ function LogoutButton()
 
 function SendMessageForm ()
 {
+  // Helper function, checks for empty string.
+  function validateText (message)
+  {
+    return message !== ""
+  }
+
   const sendMessage = () => {
     const TEXT = document.getElementById('new-message-input').value
+    
     // Validate message before sending
-    if (TEXT != "")
+    if (validateText(TEXT))
     {
-      console.log(`'${CLIENT_EMIT_MESSAGE}' : <${TEXT}>`);
+      if (DEBUGGING)
+      {
+        console.log(`'${CLIENT_EMIT_MESSAGE}' : <${TEXT}>`);
+      }
+
       window.globalsocket.emit(CLIENT_EMIT_MESSAGE, TEXT);
       document.getElementById('new-message-input').value = "";
     }
@@ -130,7 +146,11 @@ class ConversationWindow extends React.Component {
   {
     window.globalsocket.on(SERVER_RECEIVE_MESSAGE, (msg) =>
     {
-      // console.log(`${SERVER_RECEIVE_MESSAGE}, ${msg}`);
+      if (DEBUGGING)
+      {
+        console.log(`${SERVER_RECEIVE_MESSAGE}, ${msg}`);
+      }
+
       this.setState(prevState => ({
         messages: [...prevState.messages, msg]
       }));
@@ -238,9 +258,13 @@ class NewConversationButton extends React.Component
     array_of_contacts.unshift(this.name); //add user's name to the list
     array_of_contacts = [...new Set(array_of_contacts)]; //remove any duplicates
     array_of_contacts = array_of_contacts.map(ele => ele.toLowerCase());
-    console.log("new_chat :", array_of_contacts);
+
+    if (DEBUGGING)
+    {
+      console.log("new_chat :", array_of_contacts);
+    }
+
     window.globalsocket.emit('new_chat', array_of_contacts);
-    
 }
 
   render () 
@@ -292,7 +316,10 @@ function PreviewText ({ preview_text})
 function ConversationListItem ( {_id, Members, Last_Updated, Last_Message, resetMessages})
 {
   const requestConversationFromID = () => {
-    console.log(`SERVER_EMIT_SELECT_CHAT : <${_id}>`);
+    if (DEBUGGING)
+    {
+      console.log(`SERVER_EMIT_SELECT_CHAT : <${_id}>`);
+    }
     window.globalsocket.emit(SERVER_EMIT_SELECT_CHAT, _id);
     window.activeChat = _id; //make global id so elements know if they are active
     resetMessages();
@@ -348,9 +375,18 @@ function DeleteButton({ _id, resetMessages})
   const deleteConversation = (event) => 
   {
     event.stopPropagation();
-    console.log(_id, "trying to delete id");
-    if (window.confirm('Are you sure you want to delete this conversation?')) {
-      console.log(`CLIENT_EMIT_DELETE_CHAT : <${_id}>`);
+    if (DEBUGGING)
+    {
+      console.log(_id, "trying to delete id");
+    }
+
+    if (window.confirm('Are you sure you want to delete this conversation?'))
+    {
+      if (DEBUGGING)
+      {
+        console.log(`CLIENT_EMIT_DELETE_CHAT : <${_id}>`);
+      }
+
       window.globalsocket.emit(CLIENT_EMIT_DELETE_CHAT, _id);
       if(window.activeChat === _id)
       {
@@ -391,7 +427,12 @@ class ConversationsContainer extends React.Component
     {
       this.setDefaultConv = true;
       let _id = this.state.conversations[0]['_id'];
-      console.log(`SERVER_EMIT_SELECT_CHAT : <${_id}>`);
+
+      if (DEBUGGING)
+      {
+        console.log(`SERVER_EMIT_SELECT_CHAT : <${_id}>`);
+      }
+
       window.globalsocket.emit(SERVER_EMIT_SELECT_CHAT, _id);
       window.activeChat = _id;
     }
@@ -441,13 +482,18 @@ class SignIn extends React.Component
 function TopNav()
 {
   const logout = () => {
-    console.log("trying to logout");
+    if (DEBUGGING)
+    {
+      console.log("trying to logout");
+    }
+
     document.cookie = "id_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    location.reload(); //reload page after sign-out
+    
+    //reload page after sign-out
+    location.reload(); 
   };
 
   const handleSignInClick = () => {
-    console.log("Here");
     google.accounts.id.prompt();
   };
 
