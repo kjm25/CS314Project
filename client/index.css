@@ -1,6 +1,7 @@
 :root {
     --navbar-height: 67px;
     --sidenav-width: 250px;
+    --date-time-width: 70px;
 }
 
 body
@@ -15,7 +16,7 @@ h5
 
 span.date-time
 {
-    min-width:60px;
+    width: var(--date-time-width);
     text-align: end;
 }
 
@@ -103,6 +104,22 @@ span.date-time
 {
     word-break: break-all; /* allow text to go to multiple lines without spaces*/
     white-space: normal;
+}
+
+.conversation-contacts-list
+{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: calc ()
+}
+
+.conversation-contacts-list:hover
+{
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    word-wrap: break-word;
 }
 
  /* Login Popup */

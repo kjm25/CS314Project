@@ -69,7 +69,7 @@ function LogoutButton()
     }
     
     // Clear the id_token.
-    document.cookie = "id_tokenx=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "id_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     
     // Reload page after sign-out.
     location.reload();
@@ -87,17 +87,13 @@ class LoginPopup extends React.Component
   constructor(props) {
     super(props);
     this.state = { 
-      userLoggedIn: props.signedInStatus
+      // userLoggedIn: props.signedInStatus
+      userLoggedIn: false
     }
   }
 
   closePopUp ()
   {
-    if (DEBUGGING)
-    {
-      console.log (`Closing the popup.\nLogin status: ${this.state.userLoggedIn}`) 
-    }
-
     const popup = document.getElementById('login-popup');
     popup.style['visibility'] = 'hidden'
   }
@@ -398,7 +394,7 @@ function ConversationListItem ( {_id, Members, Last_Updated, Last_Message, reset
     <div>
       <div className={conditionalClassName} onClick={requestConversationFromID}>
         <div className="d-flex justify-content-between">
-          <h5 className="conversation-contacts-list text-truncate">
+          <h5 className="conversation-contacts-list" data-tooltip={ member_list}>
             { member_list }
           </h5>
           <DateTime datetime={Last_Updated} /> 
