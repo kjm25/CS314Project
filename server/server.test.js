@@ -1,9 +1,21 @@
-const { sum, mult } = require('./server');
+const { sum, mult, io} = require('./server');
 
-test('test add', () => {
-  expect(sum(1, 2)).toBe(3);
+
+beforeAll(done => {
+    done()
+  })
+  
+afterAll(done => {
+    io.close();
+    done();
+})
+
+test('test add', function() 
+{
+    expect(sum(1, 2)).toBe(3);
 });
 
-test('test mult', () => {
-  expect(mult(1, 2)).toBe(2);
+test('test mult', function() 
+{
+    expect(mult(1, 2)).toBe(2);
 });

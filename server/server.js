@@ -361,4 +361,4 @@ function mult(a, b)
   return a * b;
 }
 
-module.exports = {sum, mult};
+module.exports = {sum, mult, io};
