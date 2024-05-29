@@ -568,7 +568,7 @@ function TopNav()
   return (
     <nav className="navbar bg-dark" aria-current="true">
       <div className="container-fluid">
-        <a className="navbar-brand text-light">Chaterize</a>
+        <a className="navbar-brand text-light">{"Chaterize"}</a>
         <div className="nav-item dropdown text-light">
           {/* <SignIn onClick={handleSignInClick} /> */}
           <div className="google-sign" id="googleButton"></div>

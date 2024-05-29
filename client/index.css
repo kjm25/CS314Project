@@ -103,6 +103,7 @@ span.date-time
     align-items: center;
     float: left; /* Align with other nav items */
     height: calc(var(--navbar-height) - 11px);
+    padding: 8px;
 }
 
 .logout-button
