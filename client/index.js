@@ -384,7 +384,8 @@ function ConversationListItem ( {_id, Members, Last_Updated, Last_Message, reset
   if (window.activeChat == _id)
   {
     conditionalClassName += " bg-secondary";
-    window.member_list = member_list;
+    window.member_list = Members.join(", ");
+    console.log(window.member_list);
   } 
   else
   {
