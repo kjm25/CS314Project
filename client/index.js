@@ -74,6 +74,7 @@ function SendMessageForm ()
 // INCOMPLETE
 function MessageBox ( {User_ID, Time_Sent, Text} )
 {
+  
   return (
     <div className="message-box card w-50 mb-1 border border-0">
       <div className="card-body pb-0">
@@ -90,22 +91,34 @@ function MessageBox ( {User_ID, Time_Sent, Text} )
 class ConversationWindow extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { messages: [] }
+    this.state = { 
+      messages: []
+    }
     this.messagesEndRef = React.createRef();
     this.conversation_id = null
+    // Use set so that it becomes impossible to add duplicates.
+    this.contacts = new Set()
   }
 
-  componentDidMount() {
+  componentDidMount()
+  {
     window.globalsocket.on(SERVER_RECEIVE_MESSAGE, (msg) =>
     {
-      console.log(`${SERVER_RECEIVE_MESSAGE}, ${msg}`);
+      // console.log(`${SERVER_RECEIVE_MESSAGE}, ${msg}`);
       this.setState(prevState => ({
         messages: [...prevState.messages, msg]
       }));
+
+      // This is only taking contacts who have entered in the chat.
+      this.contacts.add(msg.User_ID)
     });
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps)
+  {
+    // Clears the top contacts list.
+    this.contacts.clear()
+
     if (this.props.messages !== prevProps.messages) {
         this.setState({ messages: this.props.messages });
     }
@@ -119,9 +132,12 @@ class ConversationWindow extends React.Component {
   {   
     return (
       <main className="conversation-window">
+        <div className="px-2 text-end">
+          {/* Convert from a set to an array and join the elements */}
+          {Array.from(this.contacts).join(', ')}
+        </div>
         <div className="messages-container">
           {this.state.messages.map( (message) => (
-            
             <MessageBox {...message} key={message.Time_Sent} />
           ))}
         </div>
@@ -415,7 +431,7 @@ function TopNav()
         <a className="navbar-brand text-light">Chaterize</a>
         <div className="nav-item dropdown text-light">
           {/* <SignIn onClick={handleSignInClick} /> */}
-          <div class="google-sign" id="googleButton"></div>
+          <div className="google-sign" id="googleButton"></div>
           <button type="button" className="btn btn-danger mx-2" onClick={logout}>
             Logout
           </button>
