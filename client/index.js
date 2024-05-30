@@ -601,3 +601,5 @@ class TopNav extends React.Component
     );
   }
 }
+
+module.exports = validateText
