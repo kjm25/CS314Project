@@ -1,0 +1,46 @@
+/* Conversations Sidebar */
+.conversation-container
+{
+  overflow-y: auto;
+  max-width: var(--sidenav-width);
+  min-width: var(--sidenav-width);
+}
+
+
+/* Conversation List Item */
+.conversation-contacts-list
+{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc ()
+}
+
+.preview-text
+{
+  word-break: break-all; /* allow text to go to multiple lines without spaces*/
+  white-space: normal;
+}
+
+.conversation-list-item
+{
+  max-height: 100px;
+  cursor: pointer;
+}
+
+.conversation-list-item p
+{
+  width: 70%;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.conversation-contacts-list:hover
+{
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+  word-wrap: break-word;
+}

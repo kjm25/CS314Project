@@ -1,11 +1,12 @@
+const BUILD_PATH = './../client_react/build';
+
 //Seperate server code needed as MongoDB / require cannot be run from client code
 const express = require('express');
 var favicon = require('serve-favicon'); 
 const app = express();
-app.use(express.static(__dirname + './../client' ));
+app.use(express.static(__dirname + BUILD_PATH ));
 app.use(favicon(__dirname + '/favicon.ico'));
 app.use(express.json());
-
 
 //Socket.io code for constant updates
 const http = require('http');
@@ -26,7 +27,7 @@ server.listen(port, () => { //list on port
 
 app.get('/', (req, res) => {//send page to clients
   //res.send('<h1>Hello, Express.js Server!</h1>');
-  res.sendFile(path.join(__dirname, './../client', 'index.html'));
+  res.sendFile(path.join(__dirname, BUILD_PATH, 'index.html'));
 });
 
 io.on('connection', (socket) => 

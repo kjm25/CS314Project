@@ -1,0 +1,22 @@
+/* Message Box */
+.message-box
+{
+    min-width: 100px;
+}
+
+
+/* Conversation Window */
+.conversation-window
+{
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.messages-container
+{
+  height: 100%;
+  overflow-y: scroll;
+}
