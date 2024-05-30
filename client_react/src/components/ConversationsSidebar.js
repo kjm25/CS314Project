@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, useEffect } from 'react';
 
 // Components
-import Date from './Date';
+import DateTime from './Date';
 
 // Constants
 import { 
@@ -107,7 +107,7 @@ function ConversationListItem ( {_id, Members, Last_Updated, Last_Message, reset
           <h5 className="conversation-contacts-list" data-tooltip={ member_list}>
             { member_list }
           </h5>
-          <Date datetime={Last_Updated} /> 
+          <DateTime datetime={Last_Updated} /> 
           
         </div >
         <div className="d-flex justify-content-between align-items-center">

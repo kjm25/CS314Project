@@ -1,33 +1,32 @@
 // Styles
 import "./Date.css"
 
-export default function Date ( {datetime})
+export default function DateTime ( {datetime})
 {
-    // let formatter
-    // const todaysDate = new Date()
-    // const date = new Date(datetime)
+    let formatter
+    const todaysDate = new Date()
+    const date = new Date(datetime)
 
-    // // Compare the two dates, if the duration is more than a day, display 'Month Day', 
-    // // otherwise, display 'hh:mm'
-    // // Gets the milliseconds difference between the two dates.
-    // const timeDiff = Math.abs(todaysDate.getTime() - date.getTime());
+    // Compare the two dates, if the duration is more than a day, display 'Month Day', 
+    // otherwise, display 'hh:mm'
+    // Gets the milliseconds difference between the two dates.
+    const timeDiff = Math.abs(todaysDate.getTime() - date.getTime());
 
-    // // Convert to hours
-    // const hoursDiff = Math.ceil(timeDiff / (1000 * 60 * 60));
+    // Convert to hours
+    const hoursDiff = Math.ceil(timeDiff / (1000 * 60 * 60));
     
-    // if (hoursDiff > 16)
-    // {
-    //     // formatter = new Intl.DateTimeFormat('en-US', {  month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' });
-    //     formatter = new Intl.DateTimeFormat('en-US', {  month: 'short', day: 'numeric'});
-    // }
-    // else
-    // {
-    //     formatter = new Intl.DateTimeFormat('en-US', { timeStyle: "short" });
-    // }
+    if (hoursDiff > 16)
+    {
+        // formatter = new Intl.DateTimeFormat('en-US', {  month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' });
+        formatter = new Intl.DateTimeFormat('en-US', {  month: 'short', day: 'numeric'});
+    }
+    else
+    {
+        formatter = new Intl.DateTimeFormat('en-US', { timeStyle: "short" });
+    }
 
-    console.log("datetime:", datetime);
-    //let formatter = new Intl.DateTimeFormat('en-US', {  month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' });
-    return <span className="date-time">{datetime}</span>
+    const formattedDate = formatter.format(date);
+    return <span className="date-time">{formattedDate}</span>
 }
 
 

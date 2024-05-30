@@ -2,7 +2,7 @@ import React from "react"
 import { useState, useEffect, useRef } from 'react'
 
 // Components
-import Date from "./Date"
+import DateTime from "./Date"
 
 // Constants
 import { 
@@ -21,7 +21,7 @@ function MessageBox ( {User_ID, Time_Sent, Text} )
             <div className="card-body pb-0">
                 <div className="d-flex justify-content-between">
                     <h5 className="m-0">{User_ID}</h5>
-                    <Date datetime={Time_Sent} />
+                    <DateTime datetime={Time_Sent} />
                 </div>
                 <p className="text-bg-warning p-3 rounded">{Text}</p>
             </div>
