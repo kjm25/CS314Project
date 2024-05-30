@@ -77,7 +77,8 @@
       google.accounts.id.initialize({
         client_id: '278406872967-ds0j19p8s6gouvvklrma8cmpjicpmnfu.apps.googleusercontent.com',
         callback: handleCredentialResponse,
-        auto_select: false
+        auto_select: false,
+        cancel_on_tap_outside: false
       });
 
       if (document.cookie.indexOf('id_token=') === -1) {
