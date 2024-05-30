@@ -19,9 +19,9 @@ h5
 .page-content
 {
     position: fixed;
-    top: calc( 0 + var(--navbar-height));
+    top: calc( 0 + var(--navbar-height) - 9px);
     left: 0;
-    height: calc( 100vh - var(--navbar-height) + 11px );
+    height: calc( 100vh - var(--navbar-height) + 9px );
     width: 100vw;
     display: flex;
 }
@@ -37,7 +37,7 @@ h5
     /* display: flex; */
     align-items: center;
     float: left; /* Align with other nav items */
-    height: calc(var(--navbar-height) - 11px);
+    height: calc(var(--navbar-height) - 9px);
     padding: 8px;
 }
 
