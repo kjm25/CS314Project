@@ -129,7 +129,7 @@ function NewConversationButton ()
 
     useEffect ( () => {
         const handleVerified = (set_username) => {
-            setUsername("Signed in as " + set_username)
+            setUsername(set_username)
         }
 
         window.globalsocket.on ('verified', handleVerified)

@@ -9,7 +9,7 @@ export default function TopNav ()
 
     useEffect ( () => {
         const handleVerified = (set_username) => {
-            setUsername("Signed in as " + set_username)
+            setUsername("Signed in as: " + set_username)
         }
 
         window.globalsocket.on ('verified', handleVerified)
