@@ -49,11 +49,11 @@ export default function App ()
     }
     else
     {
-      return (
-        <>
-          <TopNav />
-          <WelcomePage />
-        </>
-      )
+        return (
+            <>
+                <TopNav />
+                <WelcomePage />
+            </>
+        )
     }
 }

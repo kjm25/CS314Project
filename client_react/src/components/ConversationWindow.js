@@ -31,34 +31,34 @@ function MessageBox ( {User_ID, Time_Sent, Text} )
 
 function SendMessageForm ()
 {
-  // Helper function, checks for empty string.
-  function validateText (message)
-  {
-    return message !== ""
-  }
-
-  const sendMessage = () => {
-    const TEXT = document.getElementById('new-message-input').value
-    
-    // Validate message before sending
-    if (validateText(TEXT))
+    // Helper function, checks for empty string.
+    function validateText (message)
     {
-      if (DEBUGGING)
-      {
-        console.log(`'${CLIENT_EMIT_MESSAGE}' : <${TEXT}>`);
-      }
-
-      window.globalsocket.emit(CLIENT_EMIT_MESSAGE, TEXT);
-      document.getElementById('new-message-input').value = "";
+        return message !== ""
     }
-  }
 
-  return (
-    <div className="input-group">
-      <input id="new-message-input" className="form-control" type="text" placeholder="Chaterize" />
-      <button className="btn btn-warning" type="button" id="send-message-btn" onClick={sendMessage}>Send Message</button>
-    </div>
-  )
+    const sendMessage = () => {
+        const TEXT = document.getElementById('new-message-input').value
+        
+        // Validate message before sending
+        if (validateText(TEXT))
+        {
+            if (DEBUGGING)
+            {
+                console.log(`'${CLIENT_EMIT_MESSAGE}' : <${TEXT}>`);
+            }
+
+            window.globalsocket.emit(CLIENT_EMIT_MESSAGE, TEXT);
+            document.getElementById('new-message-input').value = "";
+        }
+    }
+
+    return (
+        <div className="input-group">
+        <input id="new-message-input" className="form-control" type="text" placeholder="Chaterize" />
+        <button className="btn btn-warning" type="button" id="send-message-btn" onClick={sendMessage}>Send Message</button>
+        </div>
+    )
 }
 
 export default function ConversationWindow (props)
