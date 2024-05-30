@@ -4,7 +4,9 @@
   "main": "scripts.js",
   "scripts": {
     "test": "jest",
-    "start": "node server.js"
+    "build-client": "cd ../client_react && npm run build",
+    "start": "node server.js",
+    "pre-build": "npm i && npm run build-client"
   },
   "repository": {
     "type": "git",
