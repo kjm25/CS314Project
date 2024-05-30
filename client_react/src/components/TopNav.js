@@ -29,7 +29,7 @@ export default function TopNav ()
         document.cookie = "id_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         
         //reload page after sign-out
-        // location.reload(); 
+        window.location.reload(); 
     };
 
     return (
