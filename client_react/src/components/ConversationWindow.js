@@ -61,54 +61,66 @@ function SendMessageForm ()
     )
 }
 
-export default function ConversationWindow (props)
-{
-    const [messages, setMessages] = useState( [] )
-    // const [conversationId, setConversationId] = useState( null )
-
-    // A link that is placed at the bottom of the messages container.  
-    // This can be referenced later to automatically scroll the window 
-    // down to the bottom (newest message) of the messages container.
-    let messagesEndRef = useRef(null)
-
-    useEffect ( () => {
-        const handleReceiveMessage = (new_message) => {
-            if (DEBUGGING)
-            {
-                console.log(`${SERVER_RECEIVE_MESSAGE}, ${new_message}`);
-            }
-
-            setMessages(prevMessages => [...prevMessages, new_message])
-        }
-
-        window.globalsocket.on(SERVER_RECEIVE_MESSAGE, handleReceiveMessage)
-    }, [])
-
-    useEffect ( () => {
-        // Replacement for componentDidUpdate.  Handles updates to messages.
-        if (Array.isArray(props.messages) && props.messages !== messages)
+export default class ConversationWindow extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = { 
+        messages: [],
+      }
+      this.messagesEndRef = React.createRef();
+      this.conversation_id = null
+      // Use set so that it becomes impossible to add duplicates.
+      this.contacts = new Set(window.member_list)
+    }
+  
+    componentDidMount()
+    {
+      window.globalsocket.on(SERVER_RECEIVE_MESSAGE, (msg) =>
+      {
+        if (DEBUGGING)
         {
-            setMessages(props.messages)
+          console.log(`${SERVER_RECEIVE_MESSAGE}, ${msg}`);
         }
-
-        if (messagesEndRef.current)
-        {
-            messagesEndRef.current.scrollIntoView({ });
-        }
-    }, [props.messages, messages])
-
-    return (
+  
+        this.setState(prevState => ({
+          messages: [...prevState.messages, msg]
+        }));
+  
+        // This is only taking contacts who have entered in the chat.
+        this.contacts.add(msg.User_ID)
+      });
+    }
+  
+    componentDidUpdate(prevProps)
+    {
+      // Clears the top contacts list.
+      this.contacts.clear()
+  
+      if (this.props.messages !== prevProps.messages) {
+          this.setState({ messages: this.props.messages });
+      }
+      if (this.messagesEndRef.current)
+      {
+        this.messagesEndRef.current.scrollIntoView({ });
+      }
+    }
+  
+    render ()
+    {   
+      return (
         <main className="conversation-window">
-            <div className="px-2 text-end text-muted">
-                {window.member_list}
-            </div>
-            <div className="messages-container">
-                {messages.map( (message) => (
-                    <MessageBox {...message} key={message.Time_Sent} />
-                ))}
-                <div ref={messagesEndRef} />
-            </div>
-            <SendMessageForm resetMessages={props.resetMessages} />
+          <div className="px-2 text-end text-muted">
+            {/* Convert from a set to an array and join the elements */}
+            {window.member_list}
+          </div>
+          <div className="messages-container">
+            {this.state.messages.map( (message) => (
+              <MessageBox {...message} key={message.Time_Sent} />
+            ))}
+          {<div ref={this.messagesEndRef} />}
+          </div>
+          <SendMessageForm resetMessages={this.resetMessages} />
         </main>
-    )
-}
+      );
+    }
+  }
