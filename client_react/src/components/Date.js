@@ -15,10 +15,13 @@ export default function DateTime ( {datetime})
     // Convert to hours
     const hoursDiff = Math.ceil(timeDiff / (1000 * 60 * 60));
     
-    if (hoursDiff > 16)
+    if (hoursDiff > 160)
     {
-        // formatter = new Intl.DateTimeFormat('en-US', {  month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' });
         formatter = new Intl.DateTimeFormat('en-US', {  month: 'short', day: 'numeric'});
+    }
+    else if (hoursDiff > 16)
+    {
+        formatter = new Intl.DateTimeFormat('en-US', {  month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric' });
     }
     else
     {
