@@ -1,11 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import App from './App';
 import DateTime from './components/Date';
-const socket_client = require('socket.io-client');
+import MockedSocket from 'socket.io-mock';
 
 
 beforeAll(async () => { //before tests starts connect to MongoDB
-  window.globalsocket = socket_client(); //gives mock socket for app - emits some errors about not finding server
+  window.globalsocket = new MockedSocket(); //gives mock socket for app
  // await client.connect();
   //db = client.db('testDB');
 });
@@ -20,11 +20,13 @@ describe("The entire app renders", () => {
   test('The entire app renders with welcome page', () => {
     document.cookie = "id_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     render(<App />);
+    expect(screen.getByText("Welcome to Chaterize!")).toBeInTheDocument()
   });
 
   test('The entire app renders with main page', () => {
     document.cookie = "id_token=Notwelcome; Max-Age=50; path=/;";
     render(<App />);
+    expect(screen.getByText("Create")).toBeInTheDocument()
   });
 }); 
 
