@@ -191,7 +191,7 @@ function NewConversationButton ()
 
     return (
         <div className="hstack gap-1 border-bottom pb-3 border-secondary">
-            <input id="newConversationInput" className="form-control" type="text" placeholder="New Conversation" name="conversation"/>
+            <input id="newConversationInput" className="form-control" type="text" placeholder="@contacts" name="conversation"/>
             <button type="button" className="btn btn-warning d-flex align-items-center gap-1" onClick={startNewConversation}>
               <FontAwesomeIcon icon={faPlus} />
               Create

@@ -13,6 +13,10 @@ import {
 // Styles
 import "./ConversationWindow.css"
 
+// Icons
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faReplyAll } from '@fortawesome/free-solid-svg-icons';
+
 function MessageBox ( {User_ID, Time_Sent, Text} )
 {
     return (
@@ -54,8 +58,11 @@ function SendMessageForm ()
 
     return (
         <div className="input-group">
-        <input id="new-message-input" className="form-control" type="text" placeholder="Chaterize" />
-        <button className="btn btn-warning" type="button" id="send-message-btn" onClick={sendMessage}>Send Message</button>
+          <input id="new-message-input" className="form-control" type="text" placeholder="Chaterize" autofocus autoComplete="off" minLength={1}/>
+          <button className="btn btn-warning gap-1 d-flex align-items-center" type="button" id="send-message-btn" onClick={sendMessage}>
+            <FontAwesomeIcon icon={faReplyAll} />
+            Send
+          </button>
         </div>
     )
 }

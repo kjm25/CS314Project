@@ -1,7 +1,15 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 
+// Constants
 import { DEBUGGING } from './Constants'
+
+// Styles
+import './TopNav.css'
+
+// Icons
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
 export default function TopNav ()
 {
@@ -33,15 +41,17 @@ export default function TopNav ()
     };
 
     return (
-        <nav className="navbar bg-dark" aria-current="true">
-        <div className="container-fluid">
-            {/* <a className="navbar-brand text-light">{ greetingMessages[Math.floor(Math.random() * (greetingMessages.length - 1))] + " " + this.state.username}</a> */}
-            <h1 className="navbar-brand text-light">{username}</h1>
-            <div className="nav-item dropdown text-light">
-            <div className="google-sign" id="googleButton"></div>
-            <button type="button" className="btn btn-danger mx-2" onClick={logout}>Logout</button>
+        <nav className="navbar bg-dark topnav" aria-current="true">
+            <div className="container-fluid">
+                {/* <a className="navbar-brand text-light">{ greetingMessages[Math.floor(Math.random() * (greetingMessages.length - 1))] + " " + this.state.username}</a> */}
+                <h1 className="navbar-brand text-light">{username}</h1>
+                <div className="nav-item dropdown text-light">
+                <div className="google-sign" id="googleButton"></div>
+                <button type="button" className="btn btn-danger mx-2 d-flex align-items-center gap-1" onClick={logout}>
+                    <FontAwesomeIcon icon={faSignOutAlt} />
+                    Sign Out</button>
+                </div>
             </div>
-        </div>
         </nav>
     )
 }
