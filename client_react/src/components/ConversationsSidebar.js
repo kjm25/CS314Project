@@ -21,6 +21,18 @@ function PreviewText ({ preview_text})
     return <p>{preview_text}</p>
 }
 
+function ConversationMembers ({ members })
+{
+  return (
+    <>
+      <h5 className="conversation-contacts-list">
+        {members}
+        <span className="conversation-contacts-tooltip">{members}</span>
+      </h5>
+    </>
+  )
+}
+
 function DeleteButton({ _id, resetMessages}) 
 {
     const deleteConversation = (event) => 
@@ -104,9 +116,7 @@ function ConversationListItem ( {_id, Members, Last_Updated, Last_Message, reset
     <div>
       <div className={conditionalClassName} onClick={requestConversationFromID}>
         <div className="d-flex justify-content-between">
-          <h5 className="conversation-contacts-list" data-tooltip={ member_list}>
-            { member_list }
-          </h5>
+          <ConversationMembers members={member_list} />
           <DateTime datetime={Last_Updated} /> 
           
         </div >
