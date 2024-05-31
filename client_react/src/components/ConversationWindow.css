@@ -9,8 +9,7 @@
 .member-list
 {
   /* Aligns the text to the right, also helps with the overflow */
-  direction: rtl;
-  text-align: start;
+  text-align: right;
 
   /* Truncate Text */
   white-space: nowrap;
