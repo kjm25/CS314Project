@@ -12,6 +12,8 @@ import {
     SERVER_EMIT_SELECT_CHAT 
 } from './Constants';
 
+import { FAKE_CONVERSATION_DATA } from './Constants';
+
 // Styles
 import "./ConversationsSidebar.css"
 
@@ -62,7 +64,7 @@ function DeleteButton({ _id, resetMessages})
 
     return (
         <div data-bs-theme="dark">
-            <button className="btn-close" onClick={deleteConversation} aria-label="Close"></button>
+            <button className="close-button btn-close" onClick={deleteConversation} aria-label="Close"></button>
         </div>
     )
 }
@@ -90,7 +92,7 @@ function ConversationListItem ( {_id, Members, Last_Updated, Last_Message, reset
   // If the conversation list item matches, then apply an "active" 
   // state to the classnames.  Also update the global member_list 
   // to include the members of the active conversation
-  let conditionalClassName = "text-light p-2 conversation-list-item border border-bottom"
+  let conditionalClassName = "text-light p-2 conversation-list-item"
   if (window.activeChat === _id)
   {
     conditionalClassName += " bg-secondary";
@@ -227,6 +229,7 @@ export default function ConversationsSidebar ( {resetMessages})
             {conversations.map((conversation) => (
                 <ConversationListItem key={conversation._id} {...conversation} resetMessages={resetMessages} />
             ))}
+            <ConversationListItem key={FAKE_CONVERSATION_DATA[0]._id} {...FAKE_CONVERSATION_DATA[0]} resetMessages={resetMessages} />
         </nav>
     )
 }
