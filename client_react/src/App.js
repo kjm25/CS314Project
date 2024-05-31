@@ -30,6 +30,8 @@ export default function App ()
 
         window.globalsocket.on ('verified', handleVerified)
 
+        window.globalsocket.on ('verified', (set_username) => {window.username = set_username})
+
         return () => {
             window.globalsocket.off ('verified', handleVerified)
         }

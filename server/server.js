@@ -33,7 +33,7 @@ app.get('/', (req, res) => {//send page to clients
 io.on('connection', (socket) => 
 {
   console.log('a user connected');
-  let server_username = "";
+  let server_username = ""; //Set user data per socket connection
   let server_chat_id = "";
   let newest_time = new Date(0);
   let chat_interval = 0;
@@ -41,7 +41,7 @@ io.on('connection', (socket) =>
   let conversations = [];
 
 
-  chat_interval = setInterval(async () => { //emit chat list
+  chat_interval = setInterval(async () => { //emit user's chat list
     if(server_username === "")
     {
       return;
@@ -51,7 +51,7 @@ io.on('connection', (socket) =>
     socket.emit('chat_list', conversations);
   }, DB_REFRESH_TIME);
 
-  message_interval = setInterval(async () => { //emit messages
+  message_interval = setInterval(async () => { //emit user's messages for selected chat
     if(server_chat_id === "" || server_username === "")
     {
       return;
@@ -64,7 +64,7 @@ io.on('connection', (socket) =>
     }
   }, DB_REFRESH_TIME);
 
-  const cookies = socket.handshake.headers.cookie;
+  const cookies = socket.handshake.headers.cookie; //try to log user in with cookies
   try
   {
     let token = JSON.parse(read_cookie("id_token", cookies));
@@ -75,7 +75,7 @@ io.on('connection', (socket) =>
     console.log("Failed to read cookie");
   }
 
-  socket.on('chat', function(chat_id)
+  socket.on('chat', function(chat_id) //select current active chat
   {
     newest_time = new Date(0);
     
@@ -92,7 +92,7 @@ io.on('connection', (socket) =>
     }
   });
 
-  socket.on('new_chat', async function(member_list)
+  socket.on('new_chat', async function(member_list) //create chat
   {
     console.log(member_list);
     newest_time = new Date(0);
@@ -107,7 +107,7 @@ io.on('connection', (socket) =>
     }
   });
 
-  socket.on('delete_chat', function(chat_id)
+  socket.on('delete_chat', function(chat_id) //delete chat
   {
     function ID_Present(element) {
       return chat_id == element["_id"];
@@ -122,7 +122,7 @@ io.on('connection', (socket) =>
     }
   });
 
-  socket.on('message', function(message)
+  socket.on('message', function(message) //add message to current chat
   {
     console.log(message); 
   
@@ -133,7 +133,7 @@ io.on('connection', (socket) =>
     }
   });
 
-  async function verify(token) 
+  async function verify(token) //verify function for google login tokens
   {
     try
     {
@@ -152,14 +152,21 @@ io.on('connection', (socket) =>
       console.error(err); //code to be executed if an error occurs
       console.log(server_username, "failed to login");
       server_username = ""; //might take time to run due to async
+      socket.emit('not_verified');
     }
   }
-  socket.on('google_sign', function(token)
+  socket.on('google_sign', function(token) // try to verify token on login attempt
   {
     verify(token);
   });
 
-  socket.on('disconnect', () => {
+  socket.on('ping', function(token) // try to verify token on login attempt
+  {
+    console.log('got pinged');
+    socket.emit('pong', "pong");
+  });
+
+  socket.on('disconnect', () => { //clear DB checks on disconnnect
     console.log('user disconnected');
     if(chat_interval)
       clearInterval(chat_interval);
@@ -195,6 +202,7 @@ const client = new MongoClient(uri, {
 
 async function db_send_message(message, username, chat_id) {
   try {
+    message = String(message);
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
     // Send a ping to confirm a successful connection
@@ -297,8 +305,12 @@ async function db_delete_chat(chat_id)
   }
 }
 
+// get a user's conversation array or creates the user and returns an empty array if the user does not exist
 async function db_get_user(email)
 {
+  if(typeof email !== "string") 
+    return [];
+  
   let result = [];
   try {
     await client.connect();
@@ -352,14 +364,8 @@ async function db_get_messages(chat_id, newest_time) {
   }
 }
 
-function sum(a, b)
+function close_server()
 {
-  return a + b;
+  server.closeAllConnections();
 }
-
-function mult(a, b)
-{
-  return a * b;
-}
-
-module.exports = {sum, mult, io};
+module.exports = { io, close_server, client, db_get_user, db_send_message}; //export for jest testing file

@@ -1,20 +1,52 @@
 :root {
   --navbar-height: 67px;
-  --sidenav-width: 250px;
   --date-time-width: 70px;
+
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  user-select: none;
 }
 
+body
+{
+    overflow: hidden;
+}
+
+h5
+{
+    margin: 0;
+}
 
 .page-content
 {
     position: fixed;
-    top: calc( 0 + var(--navbar-height));
+    top: calc( 0 + var(--navbar-height) - 9px);
     left: 0;
-    height: calc( 100vh - var(--navbar-height) + 11px );
+    height: calc( 100vh - var(--navbar-height) + 9px );
     width: 100vw;
     display: flex;
 }
 
+.google-sign
+{
+    float: left; /* don't be alone at the top */
+    padding: 0px 0px 0px;
+}
+
+.google-container
+{
+    /* display: flex; */
+    align-items: center;
+    float: left; /* Align with other nav items */
+    height: calc(var(--navbar-height) - 9px);
+    padding: 8px;
+}
+
+.logout-button
+{
+    height: 44px;
+    float: right;
+    padding: 0px 0px 0px;
+}
 
 .username
 {

@@ -1,6 +1,6 @@
 /* Date */
 span.date-time
 {
-    width: var(--date-time-width);
+    min-width: var(--date-time-width);
     text-align: end;
 }

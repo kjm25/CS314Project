@@ -12,13 +12,30 @@ import {
     SERVER_EMIT_SELECT_CHAT 
 } from './Constants';
 
+import { FAKE_CONVERSATION_DATA } from './Constants';
+
 // Styles
 import "./ConversationsSidebar.css"
+
+// Icons
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 
 function PreviewText ({ preview_text})
 {
     return <p>{preview_text}</p>
+}
+
+function ConversationMembers ({ members })
+{
+  return (
+    <>
+      <h5 className="conversation-contacts-list">
+        <span className="conversation-contacts-tooltip">{members}</span>
+      </h5>
+    </>
+  )
 }
 
 function DeleteButton({ _id, resetMessages}) 
@@ -50,7 +67,7 @@ function DeleteButton({ _id, resetMessages})
 
     return (
         <div data-bs-theme="dark">
-            <button className="btn-close" onClick={deleteConversation} aria-label="Close"></button>
+            <button className="close-button btn-close" onClick={deleteConversation} aria-label="Close"></button>
         </div>
     )
 }
@@ -78,7 +95,7 @@ function ConversationListItem ( {_id, Members, Last_Updated, Last_Message, reset
   // If the conversation list item matches, then apply an "active" 
   // state to the classnames.  Also update the global member_list 
   // to include the members of the active conversation
-  let conditionalClassName = "text-light p-2 conversation-list-item border border-bottom"
+  let conditionalClassName = "text-light p-2 conversation-list-item"
   if (window.activeChat === _id)
   {
     conditionalClassName += " bg-secondary";
@@ -104,9 +121,7 @@ function ConversationListItem ( {_id, Members, Last_Updated, Last_Message, reset
     <div>
       <div className={conditionalClassName} onClick={requestConversationFromID}>
         <div className="d-flex justify-content-between">
-          <h5 className="conversation-contacts-list" data-tooltip={ member_list}>
-            { member_list }
-          </h5>
+          <ConversationMembers members={member_list} />
           <DateTime datetime={Last_Updated} /> 
           
         </div >
@@ -174,9 +189,12 @@ function NewConversationButton ()
     }
 
     return (
-        <div className="hstack g-1">
-            <input id="newConversationInput" className="form-control" type="text" placeholder="New Conversation" name="conversation"/>
-            <button type="button" className="btn btn-warning" onClick={startNewConversation}>Create</button>
+        <div className="hstack gap-1 border-bottom pb-3 border-secondary">
+            <input id="newConversationInput" className="form-control" type="text" placeholder="@contacts" name="conversation"/>
+            <button type="button" className="btn btn-warning d-flex align-items-center gap-1" onClick={startNewConversation}>
+              <FontAwesomeIcon icon={faPlus} />
+              Create
+            </button>
         </div>
     )
 }
@@ -217,6 +235,7 @@ export default function ConversationsSidebar ( {resetMessages})
             {conversations.map((conversation) => (
                 <ConversationListItem key={conversation._id} {...conversation} resetMessages={resetMessages} />
             ))}
+            {/* <ConversationListItem key={FAKE_CONVERSATION_DATA[0]._id} {...FAKE_CONVERSATION_DATA[0]} resetMessages={resetMessages} /> */}
         </nav>
     )
 }
