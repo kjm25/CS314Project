@@ -1,7 +1,10 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, cleanup } from '@testing-library/react';
 import App from './App';
 import DateTime from './components/Date';
 import MockedSocket from 'socket.io-mock';
+import MessageBox from './components/ConversationWindow';
+import ConversationsSidebar from './components/ConversationsSidebar';
+import { FAKE_MESSAGE_DATA } from './components/Constants';
 
 
 beforeAll(async () => { //before tests starts connect to MongoDB
@@ -10,13 +13,50 @@ beforeAll(async () => { //before tests starts connect to MongoDB
   //db = client.db('testDB');
 });
 
-test('renders learn react link', () => {
-  render(<DateTime datetime={0}/>);
-  expect(3).toBe(3);
-  //const linkElement = screen.getByText(/learn react/i);
+afterEach( () => {
+  cleanup();
 });
 
-describe("The entire app renders", () => {
+describe("Test the DateTime element", () => {
+  test('renders the date element', () => {
+    render(<DateTime datetime={0}/>);
+  });
+
+  test('renders the date with data', () => {
+    render(<DateTime datetime={0}/>);
+    expect(screen.getByText("Dec 31")).toBeInTheDocument()
+  });
+});
+  
+
+describe("Test message box", () => {
+  test('Message box renders', () => {
+    render(<MessageBox User_ID="willschw" Text="" Time_Sent={new Date(0)} />);
+  });
+}); 
+
+describe("Test the sidebar", () => {
+  test('Sidebar renders', () => {
+    render(<ConversationsSidebar />);
+  });
+
+  // test('Sidebar renders with data', async () => {
+
+  //   render(<ConversationsSidebar />);
+  //   await window.globalsocket.emit('chat_list', [{_id:"1", Member:"", Last_Updated:new Date(0), Last_Message: "Find Message", resetMessages:null}]);
+  //   setTimeout(function(){}, 2000);
+  //   expect(screen.getByText("Find Message")).toBeInTheDocument()
+  // });
+
+  test('Sidebar renders and can find button', async () => {
+
+    render(<ConversationsSidebar />);
+    expect(screen.getByText("Create")).toBeInTheDocument()
+  });
+});
+
+
+describe("Test the entire app", () => {
   test('The entire app renders with welcome page', () => {
     document.cookie = "id_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     render(<App />);
