@@ -17,6 +17,10 @@ import { FAKE_CONVERSATION_DATA } from './Constants';
 // Styles
 import "./ConversationsSidebar.css"
 
+// Icons
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+
 
 function PreviewText ({ preview_text})
 {
@@ -186,9 +190,12 @@ function NewConversationButton ()
     }
 
     return (
-        <div className="hstack g-1">
+        <div className="hstack gap-1 border-bottom pb-3 border-secondary">
             <input id="newConversationInput" className="form-control" type="text" placeholder="New Conversation" name="conversation"/>
-            <button type="button" className="btn btn-warning" onClick={startNewConversation}>Create</button>
+            <button type="button" className="btn btn-warning d-flex align-items-center gap-1" onClick={startNewConversation}>
+              <FontAwesomeIcon icon={faPlus} />
+              Create
+            </button>
         </div>
     )
 }
