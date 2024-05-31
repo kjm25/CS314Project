@@ -32,7 +32,7 @@ function ConversationMembers ({ members })
   return (
     <>
       <h5 className="conversation-contacts-list">
-        <span className="conversation-contacts-tooltip">{members}</span>
+          {members}
       </h5>
     </>
   )
@@ -235,7 +235,7 @@ export default function ConversationsSidebar ( {resetMessages})
             {conversations.map((conversation) => (
                 <ConversationListItem key={conversation._id} {...conversation} resetMessages={resetMessages} />
             ))}
-            {/* <ConversationListItem key={FAKE_CONVERSATION_DATA[0]._id} {...FAKE_CONVERSATION_DATA[0]} resetMessages={resetMessages} /> */}
+            <ConversationListItem key={FAKE_CONVERSATION_DATA[0]._id} {...FAKE_CONVERSATION_DATA[0]} resetMessages={resetMessages} />
         </nav>
     )
 }

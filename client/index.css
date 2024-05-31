@@ -109,13 +109,6 @@ span.date-time
     padding: 8px;
 }
 
-.logout-button
-{
-    height: 44px;
-    float: right;
-    padding: 0px 0px 0px;
-}
-
 .username
 {
     font-size: 32px;

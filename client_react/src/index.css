@@ -10,20 +10,3 @@ h5
 {
     margin: 0;
 }
-
-
-/* Google Authentication */
-.google-sign
-{
-    float: left; /* don't be alone at the top */
-    padding: 0px 0px 0px;
-}
-
-.google-container
-{
-    /* display: flex; */
-    align-items: center;
-    float: left; /* Align with other nav items */
-    height: calc(var(--navbar-height) - 11px);
-    padding: 8px;
-}

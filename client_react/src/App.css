@@ -1,5 +1,4 @@
 :root {
-  --navbar-height: 67px;
   --date-time-width: 70px;
 
   font-family: Verdana, Geneva, Tahoma, sans-serif;
@@ -39,13 +38,6 @@ h5
     float: left; /* Align with other nav items */
     height: calc(var(--navbar-height) - 9px);
     padding: 8px;
-}
-
-.logout-button
-{
-    height: 44px;
-    float: right;
-    padding: 0px 0px 0px;
 }
 
 .username

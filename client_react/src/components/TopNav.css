@@ -1,11 +1,25 @@
+:root {
+    --navbar-height: 67px;
+}
+
 .topnav
 {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    height: var(--navbar-height)
 }
 
-.logout-button
+/* Google Authentication */
+.google-container
 {
-    height: 44px;
-    float: right;
+    /* display: flex; */
+    align-items: center;
+    float: left; /* Align with other nav items */
+    height: var(--navbar-height);
+    padding: 8px;
+}
+
+.google-sign
+{
+    float: left; /* don't be alone at the top */
     padding: 0px 0px 0px;
 }
