@@ -5,7 +5,7 @@ const socket_client = require('socket.io-client');
 
 
 beforeAll(async () => { //before tests starts connect to MongoDB
-  window.globalsocket = socket_client(); //gives mock socket for app - emits some erros about not finding server
+  window.globalsocket = socket_client(); //gives mock socket for app - emits some errors about not finding server
  // await client.connect();
   //db = client.db('testDB');
 });
