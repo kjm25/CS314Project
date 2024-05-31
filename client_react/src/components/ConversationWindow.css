@@ -1,8 +1,8 @@
 /* Message Box */
 .message-box
 {
-    max-width: 400px;
-    min-width: 250px;
+    min-width: 65%;
+    max-width: 65%;
 }
 
 /* Member List */
@@ -16,8 +16,10 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  padding-bottom: 5px;
 
   /* Apply a smooth transition to the member-list on hover */
+  min-height: 27px;
   max-height: 27px;
   transition: max-height 0.8s ease-out;
 }
@@ -26,7 +28,7 @@
 {
   white-space: wrap;
   overflow: visible;
-  padding-bottom: 7px;
+  padding-bottom: 5px;
 
   /* Apply a smooth transition to the member-list on hover */
   max-height: 50vh;

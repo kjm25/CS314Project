@@ -6,6 +6,7 @@
 /* Conversations Sidebar */
 .conversation-container
 {
+  user-select: none;
   overflow-y: auto;
   max-width: var(--sidenav-width);
   min-width: var(--sidenav-width);

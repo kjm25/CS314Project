@@ -27,7 +27,7 @@ function MessageBox ( {User_ID, Time_Sent, Text} )
 
     return (
         <div className={messageBoxStyles}>
-            <div className="card-body pb-0">
+            <div className="card-body pb-0 user-select-auto">
                 <div className="d-flex justify-content-between">
                     <h5 className="m-0">{User_ID}</h5>
                     <DateTime datetime={Time_Sent} />
@@ -121,7 +121,7 @@ export default class ConversationWindow extends React.Component {
     {   
       return (
         <main className="conversation-window">
-          <div className="px-2 member-list bg-dark text-light border-start border-2 border-secondary">
+          <div className="px-2 member-list">
             <span>{window.member_list}</span>
           </div>
           <div className="messages-container">

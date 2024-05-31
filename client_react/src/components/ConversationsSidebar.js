@@ -93,7 +93,7 @@ function ConversationListItem ( {_id, Members, Last_Updated, Last_Message, reset
   // If the conversation list item matches, then apply an "active" 
   // state to the classnames.  Also update the global member_list 
   // to include the members of the active conversation
-  let conditionalClassName = "text-light p-2 conversation-list-item"
+  let conditionalClassName = "text-light p-2 conversation-list-item border border-secondary"
   if (window.activeChat === _id)
   {
     conditionalClassName += " bg-secondary";
@@ -188,7 +188,7 @@ function NewConversationButton ()
 
     return (
         <div className="hstack gap-1 border-bottom pb-3 border-secondary">
-            <input id="newConversationInput" className="form-control" type="text" placeholder="@contacts" name="conversation"/>
+            <input id="newConversationInput" className="form-control" type="text" placeholder="contact@example.com" name="conversation"/>
             <button type="button" className="btn btn-warning d-flex align-items-center gap-1" onClick={startNewConversation}>
               <FontAwesomeIcon icon={faPlus} />
               Create
