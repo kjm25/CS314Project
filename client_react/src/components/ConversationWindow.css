@@ -13,6 +13,7 @@
   backdrop-filter: blur(10px);
   direction: rtl;
   text-align: start;
+  white-space: nowrap;
 
   /* Truncate Text */
   white-space: nowrap;
