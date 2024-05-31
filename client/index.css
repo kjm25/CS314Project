@@ -122,11 +122,6 @@ span.date-time
     padding: 0px 0px 0px;
 }
 
-.no-scroll 
-{
-    overflow:hidden; /* used for main body */
-}
-
 .preview-text
 {
     word-break: break-all; /* allow text to go to multiple lines without spaces*/

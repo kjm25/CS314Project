@@ -1,5 +1,4 @@
 import React from "react"
-import { useState, useEffect, useRef } from 'react'
 
 // Components
 import DateTime from "./Date"
