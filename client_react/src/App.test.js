@@ -22,9 +22,18 @@ describe("Test the DateTime element", () => {
     render(<DateTime datetime={0}/>);
   });
 
-  test('renders the date with data', () => {
+  test('renders the date with data 1.', () => {
     render(<DateTime datetime={0}/>);
     expect(screen.getByText("Dec 31")).toBeInTheDocument()
+  });
+  test('renders the date with data (UTC Start)', () => {
+    render(<DateTime datetime={"1970-01-01T00:01:000"}/>);
+    expect(screen.getByText("Jan 01")).toBeInTheDocument()
+  });
+  test('renders the date with data (UTC END)', () => {
+    const todayDate = new Date();
+    render(<DateTime datetime={todayDate}/>);
+    expect(screen.getByText(todayDate)).toBeInTheDocument()
   });
 });
   
