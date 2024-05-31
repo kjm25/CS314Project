@@ -1,29 +1,35 @@
 /* Message Box */
 .message-box
 {
-    min-width: 100px;
+    max-width: 400px;
+    min-width: 250px;
 }
 
 /* Member List */
 .member-list
 {
-  
-  color: rgb(90, 90, 90, 0.9);
-  background-color: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px);
+  /* Aligns the text to the right, also helps with the overflow */
   direction: rtl;
   text-align: start;
-  white-space: nowrap;
 
   /* Truncate Text */
   white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
+
+  /* Apply a smooth transition to the member-list on hover */
+  max-height: 27px;
+  transition: max-height 0.8s ease-out;
 }
 
 .member-list:hover
 {
-  color: rgba(63, 63, 63, 1);
   white-space: wrap;
+  overflow: visible;
+  padding-bottom: 7px;
+
+  /* Apply a smooth transition to the member-list on hover */
+  max-height: 50vh;
 }
 
 
@@ -41,4 +47,7 @@
 {
   height: 100%;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
 }

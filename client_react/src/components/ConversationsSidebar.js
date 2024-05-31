@@ -12,8 +12,6 @@ import {
     SERVER_EMIT_SELECT_CHAT 
 } from './Constants';
 
-import { FAKE_CONVERSATION_DATA } from './Constants';
-
 // Styles
 import "./ConversationsSidebar.css"
 
@@ -24,7 +22,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 function PreviewText ({ preview_text})
 {
-    return <p>{preview_text}</p>
+    return <p className='preview-text'>{preview_text}</p>
 }
 
 function ConversationMembers ({ members })
@@ -126,7 +124,7 @@ function ConversationListItem ( {_id, Members, Last_Updated, Last_Message, reset
           
         </div >
         <div className="d-flex justify-content-between align-items-center">
-          <PreviewText className="preview-text" preview_text={Last_Message} />
+          <PreviewText preview_text={Last_Message} />
           <DeleteButton _id={_id} resetMessages={resetMessages}/>
         </div>
       </div>
@@ -235,7 +233,6 @@ export default function ConversationsSidebar ( {resetMessages})
             {conversations.map((conversation) => (
                 <ConversationListItem key={conversation._id} {...conversation} resetMessages={resetMessages} />
             ))}
-            <ConversationListItem key={FAKE_CONVERSATION_DATA[0]._id} {...FAKE_CONVERSATION_DATA[0]} resetMessages={resetMessages} />
         </nav>
     )
 }

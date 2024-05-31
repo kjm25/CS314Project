@@ -2,9 +2,9 @@
 .page-content
 {
     position: fixed;
-    top: calc( 0 + var(--navbar-height) - 9px);
+    top: var(--navbar-height);
     left: 0;
-    height: calc( 100vh - var(--navbar-height) + 9px );
+    height: calc( 100vh - var(--navbar-height));
     width: 100vw;
     display: flex;
 }

@@ -44,7 +44,7 @@ export default function TopNav ()
         <nav className="navbar bg-dark topnav" aria-current="true">
             <div className="container-fluid">
                 {/* <a className="navbar-brand text-light">{ greetingMessages[Math.floor(Math.random() * (greetingMessages.length - 1))] + " " + this.state.username}</a> */}
-                <h1 className="navbar-brand text-light">{username}</h1>
+                <h1 className="navbar-brand text-light mb-0">{username}</h1>
                 <div className="nav-item dropdown text-light">
                 <div className="google-sign" id="googleButton"></div>
                 <button type="button" className="btn btn-danger mx-2 d-flex align-items-center gap-1" onClick={logout}>

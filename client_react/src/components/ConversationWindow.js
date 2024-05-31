@@ -7,7 +7,7 @@ import DateTime from "./Date"
 import { 
     DEBUGGING,
     SERVER_RECEIVE_MESSAGE,
-    CLIENT_EMIT_MESSAGE
+    CLIENT_EMIT_MESSAGE,
 } from './Constants';
 
 // Styles
@@ -19,14 +19,20 @@ import { faReplyAll } from '@fortawesome/free-solid-svg-icons';
 
 function MessageBox ( {User_ID, Time_Sent, Text} )
 {
+    // Style the message boxes differently if they are sent from the user.
+    let messageBoxStyles = "message-box card w-50 mb-1 border border-0 bg-transparent"
+    messageBoxStyles += (User_ID === window.username) ? " ms-auto me-4" : " ms-4"
+    let messageTextStyles = "p-3 rounded"
+    messageTextStyles += (User_ID === window.username) ? " text-bg-warning" : " text-bg-secondary"
+
     return (
-        <div className="message-box card w-50 mb-1 border border-0">
+        <div className={messageBoxStyles}>
             <div className="card-body pb-0">
                 <div className="d-flex justify-content-between">
                     <h5 className="m-0">{User_ID}</h5>
                     <DateTime datetime={Time_Sent} />
                 </div>
-                <p className="text-bg-warning p-3 rounded">{Text}</p>
+                <p className={messageTextStyles}>{Text}</p>
             </div>
         </div>
     )
@@ -58,7 +64,7 @@ function SendMessageForm ()
 
     return (
         <div className="input-group">
-          <input id="new-message-input" className="form-control" type="text" placeholder="Chaterize" autofocus autoComplete="off" minLength={1}/>
+          <input id="new-message-input" className="form-control" type="text" placeholder="Chaterize" autoFocus autoComplete="off" minLength={1}/>
           <button className="btn btn-warning gap-1 d-flex align-items-center" type="button" id="send-message-btn" onClick={sendMessage}>
             <FontAwesomeIcon icon={faReplyAll} />
             Send
@@ -115,9 +121,8 @@ export default class ConversationWindow extends React.Component {
     {   
       return (
         <main className="conversation-window">
-          <div className="px-2 member-list">
-            {/* Convert from a set to an array and join the elements */}
-            {window.member_list}
+          <div className="px-2 member-list bg-dark text-light border-start border-2 border-secondary">
+            <span>{window.member_list}</span>
           </div>
           <div className="messages-container">
             {this.state.messages.map( (message) => (

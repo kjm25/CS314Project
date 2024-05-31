@@ -28,3 +28,31 @@ export const FAKE_CONVERSATION_DATA = [
         Last_Message : "ir email address (by splitting each contact by the delimiter '@' and selecting the first item.).  After doing that, join the array of "
     }
 ]
+
+export const FAKE_MESSAGE_DATA = [
+    {
+        User_ID : "willschw@pdx.edu", 
+        Time_Sent: "2024-05-31T10:00:00", 
+        Text: "Hey, how's it going?"
+    },
+    {
+        User_ID : "user456", 
+        Time_Sent: "2024-05-31T10:05:00", 
+        Text: "Hey! I'm good, thanks for asking. What about you?"
+    },
+    {
+        User_ID : "willschw@pdx.edu", 
+        Time_Sent: "2024-05-31T10:08:00", 
+        Text: "I'm doing alright, just catching up on some work. Anything interesting happening?"
+    },
+    {
+        User_ID : "user456", 
+        Time_Sent: "2024-05-31T10:12:00", 
+        Text: "Not much, just finished a book I've been reading. What kind of work are you catching up on?"
+    },
+    {
+        User_ID : "willschw@pdx.edu", 
+        Time_Sent: "2024-05-31T10:15:00", 
+        Text: "Oh, it's mostly project stuff. Trying to meet some deadlines."
+    }
+]
