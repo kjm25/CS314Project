@@ -108,7 +108,7 @@ export default class ConversationWindow extends React.Component {
     {   
       return (
         <main className="conversation-window">
-          <div className="px-2 text-end text-muted">
+          <div className="px-2 member-list">
             {/* Convert from a set to an array and join the elements */}
             {window.member_list}
           </div>
