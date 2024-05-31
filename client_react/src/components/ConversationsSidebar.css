@@ -9,6 +9,7 @@
   overflow-y: auto;
   max-width: var(--sidenav-width);
   min-width: var(--sidenav-width);
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 /* Conversation Members */
