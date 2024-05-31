@@ -11,15 +11,11 @@
 /* Google Authentication */
 .google-container
 {
-    /* display: flex; */
+    /* Center (vertically) the button */
+    display: flex;
     align-items: center;
-    float: left; /* Align with other nav items */
+    
+    float: left;
     height: var(--navbar-height);
-    padding: 8px;
-}
-
-.google-sign
-{
-    float: left; /* don't be alone at the top */
-    padding: 0px 0px 0px;
+    padding: 5px;
 }
