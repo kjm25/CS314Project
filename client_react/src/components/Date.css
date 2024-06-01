@@ -8,5 +8,4 @@ span.date-time
 {
     min-width: var(--date-time-width);
     text-align: end;
-    font-size: 70%;
 }

@@ -26,7 +26,22 @@ export const FAKE_CONVERSATION_DATA = [
         ],
         Last_Updated : new Date(),
         Last_Message : "ir email address (by splitting each contact by the delimiter '@' and selecting the first item.).  After doing that, join the array of "
-    }
+    },
+    {
+        _id : 589417853184317,
+        Members : [
+            "willschw@pdx.edu",
+            "kjm25@pdx.edu",
+            "rjchaney@pdx.edu",
+            "karlaf@pdx.edu",
+            "mike@pdx.edu",
+            "root@pdx.edu",
+            "null@null.edu"
+        ],
+        Last_Updated : "2024-05-29T10:12:00",
+        Last_Message : "New Message in the Preview Section. email address (by splitting each contact by the delimiter. email address (by splitting each contact by the delimiter"
+    },
+
 ]
 
 export const FAKE_MESSAGE_DATA = [

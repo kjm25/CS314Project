@@ -118,7 +118,7 @@ function ConversationListItem ( {_id, Members, Last_Updated, Last_Message, reset
   return (
     <div>
       <div className={conditionalClassName} onClick={requestConversationFromID}>
-        <div className="d-flex justify-content-between">
+        <div className="d-flex justify-content-between mb-3">
           <ConversationMembers members={member_list} />
           <DateTime datetime={Last_Updated} /> 
           
