@@ -152,43 +152,109 @@ function NewConversationButton ()
         }
     }, [] )
 
+    const clearInput = () => {
+        const formInput = document.getElementById('newConversationInput')
+        
+        // Clear the input field
+        formInput.value = ""
+
+        // Removes the wrong-input class, if the wrong-input class is not 
+        // present nothing happens.
+        formInput.classList.remove("wrong-input")
+    }
+
+    const formError = (message = "") => {
+        if (DEBUGGING && message !== "")
+            console.log (message)
+
+        // Visually indicate wrong form entry
+        document.getElementById('newConversationInput').classList.add("wrong-input");
+    }
+
+    const clearFormError = () => {
+        // Removes the wrong-input class, if the wrong-input class is not 
+        // present nothing happens.
+        document.getElementById('newConversationInput').classList.remove("wrong-input")
+    }
+
+    const validEmailFormat = (str) => {
+        // This is a regex pattern which helps identify email addresses.
+        // Source :
+        // https://regexr.com/3e48o
+        const emailRegexValidator = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+
+        // Compare the string to the regex email pattern, if it matches 
+        // a valid email, it returns true, otherwise false.
+        return emailRegexValidator.test(str)
+    }
+
+    const validArrayOfContacts = (contacts) => {
+        // Base case, empty array
+        if (contacts.length === 0)
+              return false
+          
+          // Validate that each contact in the array is a valid email.
+          for (const contact of contacts)
+          {
+              if (!validEmailFormat(contact))
+              {
+                  return false 
+              }
+          }
+
+          return true
+    }
+
+    const parseContactsFromString = (str) => {
+        // Deliminate the str by commas
+        // For each element trim the whitespace
+        // Set each element to lowercase
+        return str.split(/[ ,]+/).map( (ele) => ele.trim().toLowerCase() )
+    }
+
     const startNewConversation = () =>
     {
-      const contactsInput = document.getElementById('newConversationInput')
-      // Parse the input field
-      let array_of_contacts = contactsInput.value.split(/[ ,]+/).filter((ele) => ele.includes("@") );
+        if (DEBUGGING)
+        {
+            console.log ("User clicked Create New Conversation button")
+        }
 
-      // Clear the input
-      contactsInput.value = "";
+        // Check if the user is logged in.
+        if (username === "")
+        {
+            formError("User not logged in")
+            return
+        }
+        
+        // Parse the input field
+        let array_of_contacts = parseContactsFromString(document.getElementById('newConversationInput').value)
 
-      // Create an array from the contacts listed in the input field
-      array_of_contacts = array_of_contacts.map( (contact) => contact.trim() );
+        // Validate the array of contacts
+        if (!validArrayOfContacts(array_of_contacts))
+        {
+            formError("Invalid Email Input")
+            return
+        }
 
-      if (username === "" || array_of_contacts.length === 0)
-      {
-          return;
-      }
+        // Add user's name to the list.
+        array_of_contacts.unshift(username);
+        
+        // Remove any duplicates by creating a set from the array.
+        array_of_contacts = [...new Set(array_of_contacts)];
 
-      // Add user's name to the list.
-      array_of_contacts.unshift(username);
-      
-      // Remove any duplicates by creating a set from the array.
-      array_of_contacts = [...new Set(array_of_contacts)];
+        if (DEBUGGING)
+        {
+            console.log("new_chat :", array_of_contacts);
+        }
 
-      // Convert to lowercase.
-      array_of_contacts = array_of_contacts.map(ele => ele.toLowerCase());
+        window.globalsocket.emit('new_chat', array_of_contacts);
 
-      if (DEBUGGING)
-      {
-          console.log("new_chat :", array_of_contacts);
-      }
-
-      window.globalsocket.emit('new_chat', array_of_contacts);
+        clearInput()
     }
 
     return (
         <div className="hstack gap-1 border-bottom pb-3 border-secondary">
-            <input id="newConversationInput" className="form-control" type="text" placeholder="contact@example.com" name="conversation"/>
+            <input id="newConversationInput" className="form-control" type="text" placeholder="contact@example.com" name="conversation" onChange={clearFormError}/>
             <button type="button" className="btn btn-warning d-flex align-items-center gap-1" onClick={startNewConversation}>
               <FontAwesomeIcon icon={faPlus} />
               Create

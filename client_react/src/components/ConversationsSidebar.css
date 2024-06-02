@@ -12,6 +12,13 @@
   min-width: var(--sidenav-width);
 }
 
+/* Wrong Input Notification */
+.wrong-input
+{
+    border: 2px solid red;
+    color: red;
+}
+
 /* Conversation Members */
 .conversation-contacts-list
 {
