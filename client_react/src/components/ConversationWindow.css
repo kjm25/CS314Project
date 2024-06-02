@@ -42,6 +42,7 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  font-size: 115%;
 }
 
 .messages-container
