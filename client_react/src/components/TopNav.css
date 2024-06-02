@@ -22,5 +22,5 @@
 .username
 {
     max-width: calc(100% - 150px); /* don't force the button onto a new line */
-    font-size: 22px !important;
+    font-size: 20px !important;
 }

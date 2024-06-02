@@ -13,7 +13,7 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
-const DB_REFRESH_TIME = 3000;
+const DB_REFRESH_TIME = 2000;
 
 const {OAuth2Client} = require('google-auth-library');
 const CLIENT_ID = "278406872967-ds0j19p8s6gouvvklrma8cmpjicpmnfu.apps.googleusercontent.com"
