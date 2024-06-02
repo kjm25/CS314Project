@@ -64,8 +64,13 @@
       // decodeJwtResponse() is a custom function defined by you
       // to decode the credential response.
       const responsePayload = window.decodeJwtResponse(response.credential)
-      const email = responsePayload['email']; 
-      //console.log(email, "just tried to signed in.");
+      const email = responsePayload['email'];
+      
+      if (document.cookie.indexOf('id_token=') !== -1) { //if logged in just save cookie and reload
+        save_cookie(response, responsePayload['exp']);
+        location.reload();
+      }
+
       globalsocket.emit('google_sign', response);
       
       //try to save token with expirary date
