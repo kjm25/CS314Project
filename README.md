@@ -12,15 +12,21 @@ The Github page for our project is [https://github.com/kjm25/CS314Project](https
 
 The Chaterize codebase is structured into two core folders: the front end in client_react and the back end in server.
 
+### Client
+
 The client_react folder contains all the React, HTML, and CSS code necessary to generate the final static webpack build that the server sends to the clients. The raw html can be found in client_react/public and the React code found can be found in client_react/src. Many of the  components are found in client_react/src/components. The front end was almost entirely built with React. Communication is first done with Express to load the page then all future communication is done with Socket.io. Authentication is done with Google Identity Services to obtain a Google credential to send to the back end.
+
+The core of the client code flows from the app.js file. The entire React app component from app.js is directly inserted into the root element of index.html for the end user to view. This app component can contain everything from the welcome page component to the main chat window component. These components are each made of smaller sub components. The code of the entire component hierarchy of the front end can be explored in the components folder. The associated effects of each component can be determined by examining their useEffect or onClick effects.
+
+### Server
 
 The server codebase is largely found in server/server.js. The server is coded in the Node.js framework. MongoDB is used for the database to maintain the persistence of our users’ messages. Communication is first done with Express to serve the initial webpack client build. All future communication is done with Socket.io. Authentication is done with Google’s google-auth-library to verify the origin of Google issued tokens that are sent from the client.
 
-Chaterize uses the MERN Stack, a free full tech stack using MongoDB, ExpressJS, React, and NodeJS.
+The server code in server.js begins by establishing a connection with the client with Express. The server then sends the client the static build of the front end code. A Socket.io connection can then be made for all future communication. The server then creates Socket.io handlers for all requests from the client from an attempted sign in to sending a message. These handlers often use the custom defined database functions at the end of the file, which provide added abstraction to using the MongoDB database to add and read the specified data.
 
 ### Libraries
 
-These are the libraries used to implement the Chaterize app.
+Chaterize uses the MERN Stack, a free full tech stack using MongoDB, ExpressJS, React, and NodeJS. Below is a list of the key libraries and services used to implement the Chaterize app.
 
 Front End:  [React](https://react.dev)\
 Communication: [Express.js](https://expressjs.com)\
@@ -118,9 +124,9 @@ node -v
 npm -v
 ```
 
-### Installing Dependencies
+### Starting Your Server
 
-After you have cloned the project and have Node installed, you’ll then need to install the dependencies of the project. Running `npm run pre-build` will automatically install the necessary files before creating a production build of the application. The commands below can be run to build the client and start the server before connecting to the project over localhost.
+After you have cloned the project and have Node installed, you’ll then need to install the dependencies of the project. Running `npm run pre-build` will automatically install the necessary files before creating a production build of the application. The commands below can be run to install dependencies, build the client, and start the server.
 
 ```
 cd server
