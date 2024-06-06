@@ -11,6 +11,14 @@ import {
     SERVER_RECEIVE_CHAT_LIST,
     SERVER_EMIT_SELECT_CHAT 
 } from './Constants';
+import {
+    clearInput,
+    formError,
+    clearFormError,
+    validArrayOfContacts,
+    stripEmail,
+    parseContactsFromString
+} from '../utils/utils'
 
 // Styles
 import "./ConversationsSidebar.css"
@@ -74,63 +82,56 @@ function DeleteButton({ _id, resetMessages})
 
 function ConversationListItem ( {_id, Members, Last_Updated, Last_Message, resetMessages})
 {
-  const requestConversationFromID = () => {
-    if (DEBUGGING)
+    const requestConversationFromID = () => {
+        if (DEBUGGING)
+        {
+            console.log(`SERVER_EMIT_SELECT_CHAT : <${_id}>`);
+            console.log(`ConversationListItem, Members of the current conversation: ${Members}`)
+        }
+        window.globalsocket.emit(SERVER_EMIT_SELECT_CHAT, _id);
+        window.activeChat = _id; //make global id so elements know if they are active
+        resetMessages();
+    };
+
+    // If the conversation list item matches, then apply an "active" 
+    // state to the classnames.  Also update the global member_list 
+    // to include the members of the active conversation
+    let conditionalClassName = "text-light p-2 conversation-list-item border border-secondary"
+    if (window.activeChat === _id)
     {
-      console.log(`SERVER_EMIT_SELECT_CHAT : <${_id}>`);
-      console.log(`ConversationListItem, Members of the current conversation: ${Members}`)
+        conditionalClassName += " bg-secondary";
+        window.member_list = Members.join(", ");
+    } 
+    else
+    {
+        conditionalClassName += " bg-dark";
     }
-    window.globalsocket.emit(SERVER_EMIT_SELECT_CHAT, _id);
-    window.activeChat = _id; //make global id so elements know if they are active
-    resetMessages();
-  };
 
-  function stripEmail ( email )
-  {
-    return email.split('@')[0]
-  }
+    // Remove yourself from display list if there is another member
+    let member_list = Members;
+    if(member_list.length > 1)
+    {
+        member_list = member_list.filter(((ele) => ele !== window.username ));
+    }
 
-  // If the conversation list item matches, then apply an "active" 
-  // state to the classnames.  Also update the global member_list 
-  // to include the members of the active conversation
-  let conditionalClassName = "text-light p-2 conversation-list-item border border-secondary"
-  if (window.activeChat === _id)
-  {
-    conditionalClassName += " bg-secondary";
-    window.member_list = Members.join(", ");
-  } 
-  else
-  {
-    conditionalClassName += " bg-dark";
-  }
+    // Take the string of contacts, remove their email address (by splitting each contact by the delimiter '@' 
+    // and selecting the first item.).  After doing that, join the array of names with a comma and a space.
+    member_list = member_list.map((contact) => stripEmail(contact)).join(', ')
 
-  // Remove yourself from display list if there is another member
-  let member_list = Members;
-  if(member_list.length > 1)
-  {
-    member_list = member_list.filter(((ele) => ele !== window.username ));
-  }
-
-  // Take the string of contacts, remove their email address (by splitting each contact by the delimiter '@' 
-  // and selecting the first item.).  After doing that, join the array of names with a comma and a space.
-  member_list = member_list.map((contact) => stripEmail(contact)).join(', ')
-
-  return (
-    <div>
-      <div className={conditionalClassName} onClick={requestConversationFromID}>
-        <div className="d-flex justify-content-between mb-3">
-          <ConversationMembers members={member_list} />
-          <DateTime datetime={Last_Updated} /> 
-          
-        </div >
-        <div className="d-flex justify-content-between align-items-center">
-          <PreviewText preview_text={Last_Message} />
-          <DeleteButton _id={_id} resetMessages={resetMessages}/>
+    return (
+        <div>
+            <div className={conditionalClassName} onClick={requestConversationFromID}>
+                <div className="d-flex justify-content-between mb-3">
+                    <ConversationMembers members={member_list} />
+                    <DateTime datetime={Last_Updated} /> 
+                </div >
+                <div className="d-flex justify-content-between align-items-center">
+                    <PreviewText preview_text={Last_Message} />
+                    <DeleteButton _id={_id} resetMessages={resetMessages}/>
+                </div>
+            </div>
         </div>
-      </div>
-      
-    </div>
-  )
+    )
 }
 
 // Add current user as one of the contacts.
@@ -151,66 +152,6 @@ function NewConversationButton ()
             window.globalsocket.off ('verified', handleVerified)
         }
     }, [] )
-
-    const clearInput = () => {
-        const formInput = document.getElementById('newConversationInput')
-        
-        // Clear the input field
-        formInput.value = ""
-
-        // Removes the wrong-input class, if the wrong-input class is not 
-        // present nothing happens.
-        formInput.classList.remove("wrong-input")
-    }
-
-    const formError = (message = "") => {
-        if (DEBUGGING && message !== "")
-            console.log (message)
-
-        // Visually indicate wrong form entry
-        document.getElementById('newConversationInput').classList.add("wrong-input");
-    }
-
-    const clearFormError = () => {
-        // Removes the wrong-input class, if the wrong-input class is not 
-        // present nothing happens.
-        document.getElementById('newConversationInput').classList.remove("wrong-input")
-    }
-
-    const validEmailFormat = (str) => {
-        // This is a regex pattern which helps identify email addresses.
-        // Source :
-        // https://regexr.com/3e48o
-        const emailRegexValidator = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
-
-        // Compare the string to the regex email pattern, if it matches 
-        // a valid email, it returns true, otherwise false.
-        return emailRegexValidator.test(str)
-    }
-
-    const validArrayOfContacts = (contacts) => {
-        // Base case, empty array
-        if (contacts.length === 0)
-              return false
-          
-          // Validate that each contact in the array is a valid email.
-          for (const contact of contacts)
-          {
-              if (!validEmailFormat(contact))
-              {
-                  return false 
-              }
-          }
-
-          return true
-    }
-
-    const parseContactsFromString = (str) => {
-        // Deliminate the str by commas
-        // For each element trim the whitespace
-        // Set each element to lowercase
-        return str.split(/[ ,]+/).map( (ele) => ele.trim().toLowerCase() )
-    }
 
     const startNewConversation = () =>
     {
