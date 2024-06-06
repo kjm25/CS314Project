@@ -1,10 +1,17 @@
-import { render, screen, cleanup } from '@testing-library/react';
+import { render, screen, cleanup, fireEvent } from '@testing-library/react';
 import App from './App';
 import DateTime from './components/Date';
 import MockedSocket from 'socket.io-mock';
 import MessageBox from './components/ConversationWindow';
 import ConversationsSidebar from './components/ConversationsSidebar';
 import { FAKE_MESSAGE_DATA } from './components/Constants';
+
+// Constants
+import {
+  parseContactsFromString,
+  validEmailFormat,
+  formError
+} from './utils/utils'
 
 
 beforeAll(async () => { //before tests starts connect to MongoDB
@@ -71,12 +78,157 @@ describe("Render Sidebar and Subcomponents", () => {
   });
 });
 
-// describe ("Create new Conversation", () => {
-//   test('Input values are parsed correctly', async () => {
+describe ("Create new Conversation", () => {
+  test("Input values are parsed correctly", async () => {
+    const test_values = [
+      {
+        emails : "abel@test.com",
+        expected : 1
+      },
+      {
+        emails : "abel@test.com, bret@test.com, cole@test.com",
+        expected : 3
+      },
+      {
+        emails : "ABEL@test.com, BreT@TesT.cOm, cOLe@TEST.coM",
+        expected : 3
+      },
+      {
+        emails : "abel@test.com  bret@test.com  cole@test.com",
+        expected : 3
+      },
+    ]
 
-//   })
-// })
+    for (const test_case of test_values)
+    {
+      expect( parseContactsFromString(test_case["emails"])).toHaveLength(test_case["expected"])
+    }
+  })
 
+  test("Email validation", async () => {
+    const test_values = [
+      {
+        emails : "abel@test.com",
+        expected : true
+      },
+      {
+        emails : "bret@test.org",
+        expected : true
+      },
+      {
+        emails : "cole@test.net",
+        expected : true
+      },
+      {
+        emails : "abel@test.comm",
+        expected : true
+      },
+      {
+        emails : "abel@t.com",
+        expected : true
+      },
+      {
+        emails : "abel@test.co",
+        expected : true
+      },
+      {
+        emails : "abel@test.c",
+        expected : false
+      },
+      {
+        emails : "a@test.com",
+        expected : true
+      },
+      {
+        emails : "a@.com",
+        expected : false
+      },
+      {
+        emails : "@test.com",
+        expected : false
+      },
+      {
+        emails : "@.com",
+        expected : false
+      },
+      {
+        emails : "abel@test.company",
+        expected : false
+      },
+      {
+        emails : "areallylongnameinthefront@test.com",
+        expected : true
+      }
+    ]
+
+    for (const test_case of test_values)
+    {
+      expect( validEmailFormat(test_case["emails"]) ).toBe(test_case["expected"])
+    }
+  })
+
+  test ('Check if invalid email inputs change the input classlist', () => {
+    render(<ConversationsSidebar />)
+    formError ()
+    expect (document.getElementById("newConversationInput").classList.contains('wrong-input')).toBe(true)
+  })
+
+  test ('Check if duplicate values are removed', () => {
+    const test_values = [
+      {
+        emails : "abel@test.com",
+        expected : 1
+      },
+      {
+        emails : "abel@test.com, bret@test.com, cole@test.com",
+        expected : 3
+      },
+      {
+        emails : "ABEL@test.com, BreT@TesT.cOm, cOLe@TEST.coM",
+        expected : 3
+      },
+      {
+        emails : "bret@test.com, cole@test.com",
+        expected : 3
+      },
+      {
+        emails : "abelly@test.com, cole@test.com",
+        expected : 3
+      },
+      {
+        emails : "abel@test.com, cole@test.com, bret@test.com, bret@test.com, bret@test.com, bret@test.com, bret@test.com",
+        expected : 3
+      },
+    ]
+
+    const username = "abel@test.com"
+
+    for (const test_case of test_values)
+    {
+      let array_of_contacts = parseContactsFromString(test_case["emails"])
+  
+        // ======  Taken from ConversationSidebar.js  ===========||
+        array_of_contacts.unshift(username);                  // ||
+        array_of_contacts = [...new Set(array_of_contacts)];  // ||
+        // ======================================================||
+
+        expect (array_of_contacts).toHaveLength(test_case["expected"])
+    }
+  })
+
+  // test ('New Conversation Added to Sidebar', () => {
+  //   const emails = "abel@test.com, bret@test.com, cole@test.com"
+  //   const contacts_in_sidebar = /abel/i
+    
+  //   render(<ConversationsSidebar />)
+  //   window.globalsocket.emit('verified', "will@testing.com")
+
+  //   const inputField = document.getElementById('newConversationInput').value = emails
+  //   fireEvent.click(screen.getByText('Create'))
+
+  //   expect (screen.getByText(contacts_in_sidebar)).toBeInTheDocument()
+  // })
+})
 
 describe("Test the entire app", () => {
   test('The entire app renders with welcome page', () => {
