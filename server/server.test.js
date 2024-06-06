@@ -131,7 +131,7 @@ describe('db_get_user', () => {
 //test if db_send_message correctly sends messages to the db with the given message_text, username, and chat_id
 describe('db_send_message', () => {
     const database = client.db("testDB")
-    chat_id = "665667dcb8ad2de1dda7e234"; //existing chat to not depend on new chat function
+    chat_id = "66621ac256cffb7b743b9205"; //existing chat to not depend on new chat function
     const messageCollection = database.collection("messages");
     const chatCollection = database.collection("chats");
 
