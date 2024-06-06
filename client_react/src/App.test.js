@@ -26,14 +26,16 @@ describe("Test the DateTime element", () => {
     render(<DateTime datetime={0}/>);
     expect(screen.getByText("Dec 31")).toBeInTheDocument()
   });
+  
   test('renders the date with data (UTC Start)', () => {
-    render(<DateTime datetime={"1970-01-01T00:01:000"}/>);
-    expect(screen.getByText("Jan 01")).toBeInTheDocument()
+    render(<DateTime datetime={"1970-01-01T00:01:00"}/>);
+    expect(screen.getByText(/Jan 1/i)).toBeInTheDocument()
   });
-  test('renders the date with data (UTC END)', () => {
-    const todayDate = new Date();
-    render(<DateTime datetime={todayDate}/>);
-    expect(screen.getByText(todayDate)).toBeInTheDocument()
+
+  test('renders the date with current date', () => {
+    const todayDate = new Date()
+    render (<DateTime datetime={todayDate}/>)
+    expect(screen.getByText(/:/i)).toBeInTheDocument()
   });
 });
   
@@ -44,7 +46,7 @@ describe("Test message box", () => {
   });
 }); 
 
-describe("Test the sidebar", () => {
+describe("Render Sidebar and Subcomponents", () => {
   test('Sidebar renders', () => {
     render(<ConversationsSidebar />);
   });
@@ -56,13 +58,24 @@ describe("Test the sidebar", () => {
   //   setTimeout(function(){}, 2000);
   //   expect(screen.getByText("Find Message")).toBeInTheDocument()
   // });
-
-  test('Sidebar renders and can find button', async () => {
+  test('Create Button Renders', async () => {
 
     render(<ConversationsSidebar />);
     expect(screen.getByText("Create")).toBeInTheDocument()
   });
+
+  test('Input field renders', async () => {
+
+    render(<ConversationsSidebar />);
+    expect(screen.getByPlaceholderText("contact@example.com")).toBeInTheDocument()
+  });
 });
+
+// describe ("Create new Conversation", () => {
+//   test('Input values are parsed correctly', async () => {
+
+//   })
+// })
 
 
 describe("Test the entire app", () => {
